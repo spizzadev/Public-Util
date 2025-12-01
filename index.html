@@ -2,10 +2,8 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
   <script language="javascript" type="text/javascript">
@@ -18,79 +16,420 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
 
-  <!-- Google Fonts for modern font style -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet" />
 
-  <!-- Prism.js CSS for syntax highlighting (Dark Theme) -->
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Prism.js CSS for syntax highlighting -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
-
-  <!-- Custom CSS to adjust pre/code styling -->
-  <style>
-    pre {
-      margin: 0;
-      padding: 0.5rem 1rem 0.5rem 0.5rem;
-      /* top, right, bottom, left */
-      overflow-x: auto;
-    }
-
-    pre code {
-      margin: 0;
-      padding: 0;
-      display: block;
-    }
-  </style>
 
   <link rel="stylesheet" href="styles.css" />
 
-  <title>Public Util</title>
+  <title>Markus Spitzer - Portfolio</title>
 </head>
 
 <body>
-  <div class="container my-5">
-    <!-- SSH Public Key Section -->
-    <div class="mb-4">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2>SSH Public Key</h2>
-        <button class="btn btn-primary btn-sm" onclick="copyToClipboard('sshCode')">
-          Copy
-        </button>
-      </div>
-      <pre><code id="sshCode" class="language-bash">Loading...</code></pre>
-    </div>
-
-    <!-- Signing Public Key Section -->
-    <div class="mb-4">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2>Signing Public Key</h2>
-        <button class="btn btn-primary btn-sm" onclick="copyToClipboard('signing')">
-          Copy
-        </button>
-      </div>
-      <pre><code id="signing" class="language-bash">Loading...</code></pre>
-    </div>
-
-    <!-- Bash Default Configuration Section -->
-    <div class="mb-4">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2>Bash Default Configuration</h2>
-        <button class="btn btn-primary btn-sm" onclick="copyToClipboard('bashrcCode')">
-          Copy
-        </button>
-      </div>
-      <pre><code id="bashrcCode" class="language-bash">Loading...</code></pre>
-    </div>
+  <!-- Animated Background -->
+  <div class="animated-bg">
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
   </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#home">
+        <span class="logo-text">MS</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#experience">Projects</a></li>
+          <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+          <li class="nav-item"><a class="nav-link" href="#utilities">Utilities</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title fade-in">Markus Spitzer</h1>
+        <div class="hero-subtitle fade-in-delay-1">
+          <span class="typing-text"></span>
+        </div>
+        <p class="hero-description fade-in-delay-2">
+          Full Stack Developer | DevOps Engineer | Network Administrator
+        </p>
+        <div class="hero-cta fade-in-delay-3">
+          <a href="#contact" class="btn btn-primary btn-lg me-3">Get in Touch</a>
+          <a href="https://www.linkedin.com/in/spizza" target="_blank" class="btn btn-outline-light btn-lg">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+        </div>
+        <div class="hero-social fade-in-delay-4">
+          <a href="https://spizza.cc" target="_blank" class="social-icon"><i class="fas fa-globe"></i></a>
+          <a href="https://www.linkedin.com/in/spizza" target="_blank" class="social-icon"><i class="fab fa-linkedin"></i></a>
+          <a href="mailto:markus@spizza.cc" class="social-icon"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">About Me</h2>
+      <div class="row align-items-center">
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="about-card">
+            <h3 class="mb-4">Hello! I'm Markus 👋</h3>
+            <p>
+              I'm a passionate developer from <strong>Austria</strong> with <strong>7+ years of coding experience</strong>, 
+              specializing in infrastructure automation, DevOps, and Linux system administration. I have extensive 
+              experience with <strong>NixOS</strong>, <strong>Arch Linux</strong>, and <strong>Alpine Linux</strong>.
+            </p>
+            <p>
+              My expertise centers around building and maintaining complex <strong>home lab environments</strong> with 
+              production-grade services. I design, deploy, and manage reliable server infrastructures including web 
+              applications, databases, CI/CD pipelines, and containerized microservices.
+            </p>
+            <p>
+              Beyond traditional development, I've built a successful career in <strong>Roblox game development</strong>, 
+              combining my programming skills with creative game design and Lua scripting expertise.
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-code"></i></div>
+              <div class="stat-number">7+</div>
+              <div class="stat-label">Years Coding</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+              <div class="stat-number">50+</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-server"></i></div>
+              <div class="stat-number">24/7</div>
+              <div class="stat-label">Home Lab</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-award"></i></div>
+              <div class="stat-number">1.2</div>
+              <div class="stat-label">GPA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section id="experience" class="section bg-dark">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Projects</h2>
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center" data-aos="fade-up">
+          <div class="coming-soon-card">
+            <div class="coming-soon-icon">
+              <i class="fab fa-github"></i>
+            </div>
+            <h3>GitHub Projects Showcase</h3>
+            <p class="lead mb-4">Coming Soon</p>
+            <p class="text-muted">
+              I'm currently curating a selection of my best projects to showcase here. 
+              Check back soon to see my work in action!
+            </p>
+            <div class="mt-4">
+              <a href="https://github.com/Ruixey" target="_blank" class="btn btn-primary btn-lg">
+                <i class="fab fa-github"></i> Visit My GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="section">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Skills & Technologies</h2>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="0">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-code"></i></div>
+            <h3>Programming</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Go</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">Java</span>
+              <span class="skill-tag">C++</span>
+              <span class="skill-tag">C#</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-laptop-code"></i></div>
+            <h3>Web Development</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Angular</span>
+              <span class="skill-tag">NestJS</span>
+              <span class="skill-tag">Spring Boot</span>
+              <span class="skill-tag">HTML/CSS</span>
+              <span class="skill-tag">JavaScript</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fab fa-docker"></i></div>
+            <h3>DevOps</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">Podman</span>
+              <span class="skill-tag">CI/CD</span>
+              <span class="skill-tag">Docker Swarm</span>
+              <span class="skill-tag">Git</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fab fa-linux"></i></div>
+            <h3>Systems & Infrastructure</h3>
+            <div class="skill-list">
+              <span class="skill-tag">NixOS</span>
+              <span class="skill-tag">Arch Linux</span>
+              <span class="skill-tag">Alpine Linux</span>
+              <span class="skill-tag">Proxmox</span>
+              <span class="skill-tag">Home Lab</span>
+              <span class="skill-tag">Ubuntu</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-database"></i></div>
+            <h3>Databases</h3>
+            <div class="skill-list">
+              <span class="skill-tag">SQL</span>
+              <span class="skill-tag">MongoDB</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">Redis</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-network-wired"></i></div>
+            <h3>Networking</h3>
+            <div class="skill-list">
+              <span class="skill-tag">MikroTik</span>
+              <span class="skill-tag">Cisco</span>
+              <span class="skill-tag">VPN</span>
+              <span class="skill-tag">Tailscale</span>
+              <span class="skill-tag">TP-Link</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-comments"></i></div>
+            <h3>Languages</h3>
+            <div class="skill-list">
+              <span class="skill-tag">German (Native)</span>
+              <span class="skill-tag">English (C1)</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="700">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-gamepad"></i></div>
+            <h3>Game Development</h3>
+            <div class="skill-list">
+              <span class="skill-tag">Roblox Studio</span>
+              <span class="skill-tag">Lua</span>
+              <span class="skill-tag">Game Design</span>
+              <span class="skill-tag">3D Modeling</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="800">
+          <div class="skill-card">
+            <div class="skill-icon"><i class="fas fa-tools"></i></div>
+            <h3>Other</h3>
+            <div class="skill-list">
+              <span class="skill-tag">SCRUM</span>
+              <span class="skill-tag">Active Directory</span>
+              <span class="skill-tag">PowerShell</span>
+              <span class="skill-tag">Infrastructure as Code</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Utilities Section -->
+  <section id="utilities" class="section bg-dark">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Developer Utilities</h2>
+      <p class="text-center mb-5" data-aos="fade-up">Scripts and configurations I use regularly</p>
+      
+      <div class="utility-section" data-aos="fade-up">
+        <div class="utility-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3><i class="fas fa-key"></i> SSH Public Key</h3>
+            <button class="btn btn-primary btn-sm" onclick="copyToClipboard('sshCode')">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <pre><code id="sshCode" class="language-bash">Loading...</code></pre>
+      </div>
+
+      <div class="utility-section" data-aos="fade-up">
+        <div class="utility-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3><i class="fas fa-signature"></i> Signing Public Key</h3>
+            <button class="btn btn-primary btn-sm" onclick="copyToClipboard('signing')">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <pre><code id="signing" class="language-bash">Loading...</code></pre>
+      </div>
+
+      <div class="utility-section" data-aos="fade-up">
+        <div class="utility-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3><i class="fab fa-windows"></i> Windows Repair Script</h3>
+            <button class="btn btn-primary btn-sm" onclick="copyToClipboard('windowsRepairCode')">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <pre><code id="windowsRepairCode" class="language-powershell"># Execute the Windows Repair Script
+irm https://spizza.cc/windows-repair | iex</code></pre>
+      </div>
+
+      <div class="utility-section" data-aos="fade-up">
+        <div class="utility-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3><i class="fas fa-upload"></i> Send File Script</h3>
+            <button class="btn btn-primary btn-sm" onclick="copyToClipboard('sendCode')">
+              <i class="fas fa-copy"></i> Copy
+            </button>
+          </div>
+        </div>
+        <pre><code id="sendCode" class="language-bash"># Execute the Send File Script
+curl -fsSL https://spizza.cc/send | bash -s -- yourfile.txt</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section-title" data-aos="fade-up">Get In Touch</h2>
+      <div class="row justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+          <div class="contact-card">
+            <p class="text-center mb-5">
+              I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+            </p>
+            <div class="contact-grid">
+              <a href="mailto:markus@spizza.cc" class="contact-item">
+                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                <div class="contact-text">
+                  <h4>Email</h4>
+                  <p>markus@spizza.cc</p>
+                </div>
+              </a>
+              <a href="https://spizza.cc" target="_blank" class="contact-item">
+                <div class="contact-icon"><i class="fas fa-globe"></i></div>
+                <div class="contact-text">
+                  <h4>Website</h4>
+                  <p>spizza.cc</p>
+                </div>
+              </a>
+              <a href="https://github.com/Ruixey" target="_blank" class="contact-item">
+                <div class="contact-icon"><i class="fab fa-github"></i></div>
+                <div class="contact-text">
+                  <h4>GitHub</h4>
+                  <p>github.com/Ruixey</p>
+                </div>
+              </a>
+              <a href="https://www.linkedin.com/in/spizza" target="_blank" class="contact-item">
+                <div class="contact-icon"><i class="fab fa-linkedin"></i></div>
+                <div class="contact-text">
+                  <h4>LinkedIn</h4>
+                  <p>linkedin.com/in/spizza</p>
+                </div>
+              </a>
+            </div>
+            <div class="text-center mt-5">
+              <p class="text-muted">
+                <i class="fas fa-map-marker-alt"></i> Austria
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+          <p>&copy; 2025 Markus Spitzer. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="https://spizza.cc" target="_blank" class="footer-link">Website</a>
+          <a href="https://www.linkedin.com/in/spizza" target="_blank" class="footer-link">LinkedIn</a>
+          <a href="mailto:markus@spizza.cc" class="footer-link">Email</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
 
-  <!-- Prism.js for syntax highlighting -->
+  <!-- Prism.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-powershell.min.js"></script>
 
-  <!-- Custom script to handle file loading and copy functionality -->
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Custom Scripts -->
   <script src="scripts.js"></script>
 </body>
 
