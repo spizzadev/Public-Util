@@ -199,6 +199,31 @@ foreach ($service in $criticalServices) {
     }
 }
 
+# Send completion notification
+try {
+    $notificationBody = @"
+Windows Repair Script Completed
+
+Computer: $env:COMPUTERNAME
+Log File: $LogPath
+Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
+"@
+    
+    $notificationParams = @{
+        Uri = "https://ntfy.spizza.cc/scripts"
+        Method = "Post"
+        Headers = @{"Authorization" = "Basic c2NyaXB0cy1wdXNoZXI6U2NyaXB0Tm90aWZ5MjAyNiE="}
+        Body = $notificationBody
+        ErrorAction = "SilentlyContinue"
+    }
+    
+    Invoke-RestMethod @notificationParams
+    Write-LogEntry "Completion notification sent" -Type "SUCCESS"
+}
+catch {
+    Write-LogEntry "Failed to send notification: $($_.Exception.Message)" -Type "WARNING"
+}
+
 # Summary
 Write-LogEntry "=================================================="
 Write-LogEntry "WINDOWS REPAIR SCRIPT COMPLETED" -Type "SUCCESS"
