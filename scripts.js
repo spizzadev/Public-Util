@@ -112,7 +112,6 @@ if (typeof AOS !== "undefined") {
 // Load contents on page load
 window.addEventListener("DOMContentLoaded", () => {
   loadFileContent("ssh", "sshCode");
-  loadFileContent("gpg", "gpgCode");
 
   // Windows Repair and Send scripts are now shown as commands, not loaded
   // Highlight them with Prism
