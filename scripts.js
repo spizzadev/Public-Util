@@ -111,14 +111,16 @@ if (typeof AOS !== "undefined") {
 
 // Load contents on page load
 window.addEventListener("DOMContentLoaded", () => {
-  loadFileContent("ssh", "sshCode");
+  loadFileContent("nano", "sshNanoCode");
+  loadFileContent("backup", "sshBackupCode");
 
-  // Windows Repair and Send scripts are now shown as commands, not loaded
+  // Windows Repair and Send scripts are shown as commands, not loaded
   // Highlight them with Prism
   Prism.highlightElement(document.getElementById("windowsRepairCode"));
   Prism.highlightElement(document.getElementById("sendCode"));
 
   // Start typing animation
+
   setTimeout(typeEffect, 500);
 
   // Add entrance animation to elements
