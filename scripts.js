@@ -111,6 +111,9 @@ if (typeof AOS !== "undefined") {
 
 // Load contents on page load
 window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("copyright-year").textContent =
+    new Date().getFullYear();
+
   loadFileContent("nano", "sshNanoCode");
   loadFileContent("backup", "sshBackupCode");
 
