@@ -1,0 +1,67 @@
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
+
+[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
+public struct DEVMODE {
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+    [FieldOffset(0)]   public string dmDeviceName;
+    [FieldOffset(36)]  public short  dmSize;
+    [FieldOffset(38)]  public short  dmDriverExtra;
+    [FieldOffset(40)]  public int    dmFields;
+    [FieldOffset(44)]  public int    dmPositionX;
+    [FieldOffset(48)]  public int    dmPositionY;
+    [FieldOffset(52)]  public int    dmDisplayOrientation;
+    [FieldOffset(56)]  public int    dmDisplayFixedOutput;
+    [FieldOffset(60)]  public short  dmColor;
+    [FieldOffset(62)]  public short  dmDuplex;
+    [FieldOffset(64)]  public short  dmYResolution;
+    [FieldOffset(66)]  public short  dmTTOption;
+    [FieldOffset(68)]  public short  dmCollate;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+    [FieldOffset(70)]  public string dmFormName;
+    [FieldOffset(102)] public short  dmLogPixels;
+    [FieldOffset(104)] public int    dmBitsPerPel;
+    [FieldOffset(108)] public int    dmPelsWidth;
+    [FieldOffset(112)] public int    dmPelsHeight;
+    [FieldOffset(116)] public int    dmDisplayFlags;
+    [FieldOffset(120)] public int    dmDisplayFrequency;
+    [FieldOffset(124)] public int    dmICMMethod;
+    [FieldOffset(128)] public int    dmICMIntent;
+    [FieldOffset(132)] public int    dmMediaType;
+    [FieldOffset(136)] public int    dmDitherType;
+    [FieldOffset(140)] public int    dmReserved1;
+    [FieldOffset(144)] public int    dmReserved2;
+    [FieldOffset(148)] public int    dmPanningWidth;
+    [FieldOffset(152)] public int    dmPanningHeight;
+}
+
+public class Display {
+    [DllImport("user32.dll")]
+    public static extern bool EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+    [DllImport("user32.dll")]
+    public static extern int ChangeDisplaySettingsEx(string deviceName, ref DEVMODE devMode, IntPtr hwnd, int flags, IntPtr lParam);
+}
+"@
+
+$dm = New-Object DEVMODE
+$dm.dmSize = [System.Runtime.InteropServices.Marshal]::SizeOf($dm)
+[Display]::EnumDisplaySettings($null, -1, [ref]$dm) | Out-Null
+
+if ($dm.dmDisplayOrientation -eq 2) {
+    $dm.dmDisplayOrientation = 0
+    $label = "right-side up"
+} else {
+    $dm.dmDisplayOrientation = 2
+    $label = "upside down"
+}
+
+$dm.dmFields = 0x00000080  # DM_DISPLAYORIENTATION
+
+$result = [Display]::ChangeDisplaySettingsEx($null, [ref]$dm, [IntPtr]::Zero, 0x01, [IntPtr]::Zero)
+
+if ($result -eq 0) {
+    Write-Host "Screen is now $label." -ForegroundColor Green
+} else {
+    Write-Host "Failed to rotate screen. Error code: $result" -ForegroundColor Red
+}

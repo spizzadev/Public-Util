@@ -1,0 +1,23 @@
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "Restarting as Administrator..." -ForegroundColor Yellow
+    Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm spizza.cc/rotation | iex`""
+    exit
+}
+
+$regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\AutoRotation"
+
+if (-not (Test-Path $regPath)) {
+    New-Item -Path $regPath -Force | Out-Null
+}
+
+Set-ItemProperty -Path $regPath -Name "Enable" -Value 1 -Type DWord
+
+Write-Host "Screen rotation enabled." -ForegroundColor Green
+
+$svc = Get-Service -Name "AutoRotationService" -ErrorAction SilentlyContinue
+if ($svc) {
+    Restart-Service -Name "AutoRotationService" -Force
+    Write-Host "AutoRotationService restarted — no reboot needed." -ForegroundColor Cyan
+} else {
+    Write-Host "AutoRotationService not found. A reboot may be required." -ForegroundColor Yellow
+}
