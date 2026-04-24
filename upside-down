@@ -1,64 +1,103 @@
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host "Restarting as Administrator..." -ForegroundColor Yellow
+    Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"irm spizza.cc/upside-down | iex`""
+    exit
+}
+
 Add-Type -TypeDefinition @"
 using System;
 using System.Runtime.InteropServices;
 
-[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Ansi)]
-public struct DEVMODE {
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-    [FieldOffset(0)]   public string dmDeviceName;
-    [FieldOffset(36)]  public short  dmSize;
-    [FieldOffset(38)]  public short  dmDriverExtra;
-    [FieldOffset(40)]  public int    dmFields;
-    [FieldOffset(44)]  public int    dmPositionX;
-    [FieldOffset(48)]  public int    dmPositionY;
-    [FieldOffset(52)]  public int    dmDisplayOrientation;
-    [FieldOffset(56)]  public int    dmDisplayFixedOutput;
-    [FieldOffset(60)]  public short  dmColor;
-    [FieldOffset(62)]  public short  dmDuplex;
-    [FieldOffset(64)]  public short  dmYResolution;
-    [FieldOffset(66)]  public short  dmTTOption;
-    [FieldOffset(68)]  public short  dmCollate;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-    [FieldOffset(70)]  public string dmFormName;
-    [FieldOffset(102)] public short  dmLogPixels;
-    [FieldOffset(104)] public int    dmBitsPerPel;
-    [FieldOffset(108)] public int    dmPelsWidth;
-    [FieldOffset(112)] public int    dmPelsHeight;
-    [FieldOffset(116)] public int    dmDisplayFlags;
-    [FieldOffset(120)] public int    dmDisplayFrequency;
-    [FieldOffset(124)] public int    dmICMMethod;
-    [FieldOffset(128)] public int    dmICMIntent;
-    [FieldOffset(132)] public int    dmMediaType;
-    [FieldOffset(136)] public int    dmDitherType;
-    [FieldOffset(140)] public int    dmReserved1;
-    [FieldOffset(144)] public int    dmReserved2;
-    [FieldOffset(148)] public int    dmPanningWidth;
-    [FieldOffset(152)] public int    dmPanningHeight;
-}
+namespace UpsideDown.Native {
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct DEVMODE {
+        private const int CCHDEVICENAME = 32;
+        private const int CCHFORMNAME = 32;
 
-public class Display {
-    [DllImport("user32.dll")]
-    public static extern bool EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
-    [DllImport("user32.dll")]
-    public static extern int ChangeDisplaySettingsEx(string deviceName, ref DEVMODE devMode, IntPtr hwnd, int flags, IntPtr lParam);
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHDEVICENAME)]
+        public string dmDeviceName;
+        public short dmSpecVersion;
+        public short dmDriverVersion;
+        public short dmSize;
+        public short dmDriverExtra;
+        public int dmFields;
+        public int dmPositionX;
+        public int dmPositionY;
+        public int dmDisplayOrientation;
+        public int dmDisplayFixedOutput;
+        public short dmColor;
+        public short dmDuplex;
+        public short dmYResolution;
+        public short dmTTOption;
+        public short dmCollate;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = CCHFORMNAME)]
+        public string dmFormName;
+
+        public short dmLogPixels;
+        public int dmBitsPerPel;
+        public int dmPelsWidth;
+        public int dmPelsHeight;
+        public int dmDisplayFlags;
+        public int dmDisplayFrequency;
+        public int dmICMMethod;
+        public int dmICMIntent;
+        public int dmMediaType;
+        public int dmDitherType;
+        public int dmReserved1;
+        public int dmReserved2;
+        public int dmPanningWidth;
+        public int dmPanningHeight;
+    }
+
+    public static class Display {
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern bool EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE devMode);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern int ChangeDisplaySettingsEx(string deviceName, ref DEVMODE devMode, IntPtr hwnd, int flags, IntPtr lParam);
+    }
 }
 "@
 
-$dm = New-Object DEVMODE
-$dm.dmSize = [System.Runtime.InteropServices.Marshal]::SizeOf($dm)
-[Display]::EnumDisplaySettings($null, -1, [ref]$dm) | Out-Null
+$DMDO_DEFAULT = 0
+$DMDO_180 = 2
+$DM_DISPLAYORIENTATION = 0x00000080
+$ENUM_CURRENT_SETTINGS = -1
+$CDS_UPDATEREGISTRY = 0x01
 
-if ($dm.dmDisplayOrientation -eq 2) {
-    $dm.dmDisplayOrientation = 0
+Add-Type -AssemblyName System.Windows.Forms
+$primaryDevice = [System.Windows.Forms.Screen]::PrimaryScreen.DeviceName
+
+$dm = New-Object UpsideDown.Native.DEVMODE
+$dm.dmSize = [System.Runtime.InteropServices.Marshal]::SizeOf([type][UpsideDown.Native.DEVMODE])
+
+$targetDevice = $primaryDevice
+$readOk = [UpsideDown.Native.Display]::EnumDisplaySettings($targetDevice, $ENUM_CURRENT_SETTINGS, [ref]$dm)
+
+if (-not $readOk) {
+    # Fallback for environments where querying by explicit device name fails.
+    $targetDevice = $null
+    $readOk = [UpsideDown.Native.Display]::EnumDisplaySettings($targetDevice, $ENUM_CURRENT_SETTINGS, [ref]$dm)
+}
+
+if (-not $readOk) {
+    $lastError = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
+    Write-Host "Failed to read display settings (Win32: $lastError)." -ForegroundColor Red
+    exit 1
+}
+
+if ($dm.dmDisplayOrientation -eq $DMDO_180) {
+    $dm.dmDisplayOrientation = $DMDO_DEFAULT
     $label = "right-side up"
 } else {
-    $dm.dmDisplayOrientation = 2
+    $dm.dmDisplayOrientation = $DMDO_180
     $label = "upside down"
 }
 
-$dm.dmFields = 0x00000080  # DM_DISPLAYORIENTATION
+$dm.dmFields = $dm.dmFields -bor $DM_DISPLAYORIENTATION
 
-$result = [Display]::ChangeDisplaySettingsEx($null, [ref]$dm, [IntPtr]::Zero, 0x01, [IntPtr]::Zero)
+$result = [UpsideDown.Native.Display]::ChangeDisplaySettingsEx($targetDevice, [ref]$dm, [IntPtr]::Zero, $CDS_UPDATEREGISTRY, [IntPtr]::Zero)
 
 if ($result -eq 0) {
     Write-Host "Screen is now $label." -ForegroundColor Green
