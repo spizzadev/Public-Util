@@ -1,170 +1,300 @@
-// Function to load file content and insert it into the code block
+// =============================================
+// PREFERENCES
+// =============================================
+const reduceMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
+
+const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+// =============================================
+// FILE LOADING - SSH keys
+// =============================================
 async function loadFileContent(filePath, elementId) {
   try {
     const response = await fetch(filePath);
     if (!response.ok)
       throw new Error(`Failed to load ${filePath}: ${response.statusText}`);
     const content = await response.text();
-    document.getElementById(elementId).textContent = content;
-    Prism.highlightElement(document.getElementById(elementId)); // Reapply syntax highlighting
-  } catch (error) {
-    console.error(error);
+    const el = document.getElementById(elementId);
+    el.textContent = content.trim();
+    Prism.highlightElement(el);
+  } catch (err) {
+    console.error(err);
     document.getElementById(elementId).textContent = "Error loading file.";
   }
 }
 
-// Function to copy code content to clipboard
+// =============================================
+// CLIPBOARD - copy button with feedback
+// =============================================
 function copyToClipboard(elementId) {
-  const code = document.getElementById(elementId).innerText;
+  const code = document.getElementById(elementId).textContent;
   navigator.clipboard
     .writeText(code)
     .then(() => {
-      // Show a nicer notification
       const button = event.target.closest("button");
-      const originalHTML = button.innerHTML;
-      button.innerHTML = '<i class="fas fa-check"></i> Copied!';
-      button.classList.add("btn-success");
-      button.classList.remove("btn-primary");
-
+      const origNodes = Array.from(button.childNodes).map((n) =>
+        n.cloneNode(true),
+      );
+      button.textContent = "";
+      const icon = document.createElement("i");
+      icon.className = "fas fa-check";
+      icon.setAttribute("aria-hidden", "true");
+      button.appendChild(icon);
+      button.appendChild(document.createTextNode(" Copied!"));
+      button.style.background = "rgba(16,185,129,.16)";
+      button.style.borderColor = "rgba(16,185,129,.45)";
+      button.style.color = "#6ee7b7";
       setTimeout(() => {
-        button.innerHTML = originalHTML;
-        button.classList.remove("btn-success");
-        button.classList.add("btn-primary");
+        button.textContent = "";
+        origNodes.forEach((n) => button.appendChild(n));
+        button.style.background = "";
+        button.style.borderColor = "";
+        button.style.color = "";
       }, 2000);
     })
-    .catch((err) => console.error("Could not copy text: ", err));
+    .catch((err) => console.error("Could not copy:", err));
 }
 
-// Typing animation
-const typingText = document.querySelector(".typing-text");
+// =============================================
+// TYPING ANIMATION (intro chapter)
+// =============================================
+const typingEl = document.querySelector(".typing-text");
 const phrases = [
   "Full Stack Developer",
   "DevOps Engineer",
   "Network Administrator",
 ];
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
+let pIdx = 0,
+  cIdx = 0,
+  deleting = false;
 
 function typeEffect() {
-  const currentPhrase = phrases[phraseIndex];
-
-  if (!isDeleting && charIndex <= currentPhrase.length) {
-    typingText.textContent = currentPhrase.substring(0, charIndex);
-    charIndex++;
-    setTimeout(typeEffect, 100);
-  } else if (isDeleting && charIndex >= 0) {
-    typingText.textContent = currentPhrase.substring(0, charIndex);
-    charIndex--;
-    setTimeout(typeEffect, 50);
-  } else if (!isDeleting && charIndex === currentPhrase.length + 1) {
-    isDeleting = true;
-    setTimeout(typeEffect, 1000);
-  } else if (isDeleting && charIndex === -1) {
-    isDeleting = false;
-    phraseIndex = (phraseIndex + 1) % phrases.length;
-    charIndex = 0;
-    setTimeout(typeEffect, 200);
-  }
-}
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
-    if (target) {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-
-      // Close mobile menu if open
-      const navbarCollapse = document.querySelector(".navbar-collapse");
-      if (navbarCollapse.classList.contains("show")) {
-        navbarCollapse.classList.remove("show");
-      }
+  if (!typingEl) return;
+  const phrase = phrases[pIdx];
+  if (!deleting) {
+    typingEl.textContent = phrase.substring(0, cIdx + 1);
+    cIdx++;
+    if (cIdx === phrase.length) {
+      deleting = true;
+      return setTimeout(typeEffect, 1400);
     }
-  });
-});
-
-// Navbar background on scroll
-window.addEventListener("scroll", () => {
-  const navbar = document.querySelector(".navbar");
-  if (window.scrollY > 100) {
-    navbar.style.background = "rgba(10, 10, 15, 0.95)";
-    navbar.style.boxShadow = "0 5px 20px rgba(0, 0, 0, 0.5)";
   } else {
-    navbar.style.background = "rgba(10, 10, 15, 0.9)";
-    navbar.style.boxShadow = "none";
+    typingEl.textContent = phrase.substring(0, cIdx - 1);
+    cIdx--;
+    if (cIdx === 0) {
+      deleting = false;
+      pIdx = (pIdx + 1) % phrases.length;
+      return setTimeout(typeEffect, 350);
+    }
   }
-});
+  setTimeout(typeEffect, deleting ? 42 : 88);
+}
 
-// Initialize AOS (Animate On Scroll)
-if (typeof AOS !== "undefined") {
-  AOS.init({
-    duration: 1000,
-    once: true,
-    offset: 100,
+// =============================================
+// SCROLL REVEAL (flat sections: utilities)
+// =============================================
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const delay = parseInt(entry.target.dataset.delay || "0");
+      entry.target.style.setProperty("--reveal-delay", delay + "ms");
+      entry.target.classList.add("visible");
+      revealObserver.unobserve(entry.target);
+    });
+  },
+  { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+);
+document
+  .querySelectorAll("[data-reveal]")
+  .forEach((el) => revealObserver.observe(el));
+
+// =============================================
+// MAGNETIC BUTTONS
+// =============================================
+if (!reduceMotion) {
+  document.querySelectorAll(".btn-magnetic").forEach((btn) => {
+    btn.addEventListener("mousemove", (e) => {
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width / 2) * 0.24;
+      const y = (e.clientY - r.top - r.height / 2) * 0.24;
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.style.transition = "transform 0.45s cubic-bezier(0.16,1,0.3,1)";
+      btn.style.transform = "";
+      setTimeout(() => {
+        btn.style.transition = "";
+      }, 450);
+    });
   });
 }
 
-// Load contents on page load
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("copyright-year").textContent =
-    new Date().getFullYear();
+// =============================================
+// AURORA PARALLAX (lerped rAF loop)
+// =============================================
+const blobs = document.querySelectorAll(".aurora__blob");
+if (!reduceMotion && blobs.length) {
+  let tx = 0,
+    ty = 0,
+    cx = 0,
+    cy = 0;
+  document.addEventListener(
+    "mousemove",
+    (e) => {
+      tx = e.clientX / window.innerWidth - 0.5;
+      ty = e.clientY / window.innerHeight - 0.5;
+    },
+    { passive: true },
+  );
+  (function blobLoop() {
+    cx += (tx - cx) * 0.04;
+    cy += (ty - cy) * 0.04;
+    blobs.forEach((blob, i) => {
+      const d = (i + 1) * 34;
+      blob.style.translate = `${cx * d}px ${cy * d}px`;
+    });
+    requestAnimationFrame(blobLoop);
+  })();
+}
 
-  loadFileContent("nano", "sshNanoCode");
-  loadFileContent("backup", "sshBackupCode");
+// =============================================
+// THE JOURNEY - scroll-scrubbed prism + synced chapters
+// =============================================
+const journey = document.querySelector(".journey");
+const navChapterLinks = Array.from(
+  document.querySelectorAll(".nav__link[data-chapter]"),
+);
+let goToChapter = null;
+let updateJourney = null;
 
-  // Windows Repair and Send scripts are shown as commands, not loaded
-  // Highlight them with Prism
-  Prism.highlightElement(document.getElementById("windowsRepairCode"));
-  Prism.highlightElement(document.getElementById("sendCode"));
+(function initJourney() {
+  if (!journey) return;
 
-  // Start typing animation
+  const object = journey.querySelector(".object");
+  const faces = Array.from(journey.querySelectorAll(".object__face"));
+  const chapters = Array.from(journey.querySelectorAll(".chapter"));
+  const dots = Array.from(journey.querySelectorAll(".rail__dot"));
+  const steps = chapters.length - 1;
 
-  setTimeout(typeEffect, 500);
+  // Reduced motion: drop the pin + rotation, stack chapters as a normal page.
+  if (reduceMotion || !object || steps < 1) {
+    journey.classList.add("journey--static");
+    goToChapter = (i) =>
+      chapters[clamp(i, 0, steps)]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    return;
+  }
 
-  // Add entrance animation to elements
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -100px 0px",
+  let targetRot = 0;
+  let curRot = 0;
+  let lastIdx = -1;
+
+  function setActive(idx) {
+    if (idx === lastIdx) return;
+    lastIdx = idx;
+    faces.forEach((f, k) => f.classList.toggle("is-active", k === idx));
+    chapters.forEach((c, k) => c.classList.toggle("is-active", k === idx));
+    dots.forEach((d, k) => d.classList.toggle("is-active", k === idx));
+    navChapterLinks.forEach((link) =>
+      link.classList.toggle("is-active", +link.dataset.chapter === idx),
+    );
+  }
+
+  updateJourney = function (y) {
+    const total = journey.offsetHeight - window.innerHeight;
+    const p = total > 0 ? clamp((y - journey.offsetTop) / total, 0, 1) : 0;
+    const idx = clamp(Math.round(p * steps), 0, steps);
+    targetRot = -idx * 60;
+    setActive(idx);
   };
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = "1";
-        entry.target.style.transform = "translateY(0)";
-      }
+  goToChapter = function (i) {
+    const total = journey.offsetHeight - window.innerHeight;
+    window.scrollTo({
+      top: journey.offsetTop + (clamp(i, 0, steps) / steps) * total,
+      behavior: "smooth",
     });
-  }, observerOptions);
+  };
 
-  document
-    .querySelectorAll(".skill-card, .stat-card, .timeline-item")
-    .forEach((el) => {
-      el.style.opacity = "0";
-      el.style.transform = "translateY(20px)";
-      el.style.transition = "all 0.6s ease";
-      observer.observe(el);
-    });
+  (function spin() {
+    curRot += (targetRot - curRot) * 0.14;
+    object.style.transform = `perspective(2200px) rotateY(${curRot.toFixed(2)}deg)`;
+    requestAnimationFrame(spin);
+  })();
+
+  updateJourney(window.scrollY);
+})();
+
+// =============================================
+// SCROLL - drive chapter rotation
+// =============================================
+const nav = document.querySelector(".nav");
+let scrollTicking = false;
+
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!scrollTicking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        nav?.classList.toggle("scrolled", y > 40);
+        if (updateJourney) updateJourney(y);
+        scrollTicking = false;
+      });
+      scrollTicking = true;
+    }
+  },
+  { passive: true },
+);
+
+// =============================================
+// NAVIGATION - chapter jumps + smooth anchors + mobile toggle
+// =============================================
+const navLinksEl = document.querySelector(".nav__links");
+const navToggle = document.querySelector(".nav__toggle");
+
+function closeMobileNav() {
+  navLinksEl?.classList.remove("open");
+  navToggle?.setAttribute("aria-expanded", "false");
+}
+
+// Chapter jumps (nav links, logo, rail dots, in-chapter CTAs)
+document.querySelectorAll("[data-chapter]").forEach((el) => {
+  el.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (goToChapter) goToChapter(+el.dataset.chapter);
+    closeMobileNav();
+  });
 });
 
-// Particle effect on mouse move (subtle)
-let mouseX = 0;
-let mouseY = 0;
-
-document.addEventListener("mousemove", (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-
-  const orbs = document.querySelectorAll(".gradient-orb");
-  orbs.forEach((orb, index) => {
-    const speed = (index + 1) * 0.01;
-    const x = (mouseX - window.innerWidth / 2) * speed;
-    const y = (mouseY - window.innerHeight / 2) * speed;
-
-    orb.style.transform = `translate(${x}px, ${y}px)`;
+// Plain anchor links (e.g. Utilities, footer) - smooth scroll
+document.querySelectorAll('a[href^="#"]:not([data-chapter])').forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const target = document.querySelector(a.getAttribute("href"));
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    closeMobileNav();
   });
+});
+
+navToggle?.addEventListener("click", () => {
+  const open = navLinksEl.classList.toggle("open");
+  navToggle.setAttribute("aria-expanded", String(open));
+});
+
+// =============================================
+// INIT
+// =============================================
+window.addEventListener("DOMContentLoaded", () => {
+  loadFileContent("nano", "sshNanoCode");
+  loadFileContent("backup", "sshBackupCode");
+  Prism.highlightElement(document.getElementById("windowsRepairCode"));
+
+  setTimeout(typeEffect, 900);
 });
