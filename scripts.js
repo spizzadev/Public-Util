@@ -292,8 +292,7 @@ navToggle?.addEventListener("click", () => {
 // INIT
 // =============================================
 window.addEventListener("DOMContentLoaded", () => {
-  loadFileContent("nano", "sshNanoCode");
-  loadFileContent("backup", "sshBackupCode");
+  loadFileContent("ssh", "sshCode");
   Prism.highlightElement(document.getElementById("windowsRepairCode"));
 
   setTimeout(typeEffect, 900);
