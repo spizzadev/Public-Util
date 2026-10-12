@@ -32,9 +32,14 @@ Plain-text scripts served directly at `spizza.cc/<filename>` — meant to be pip
 | `brainrot` | PowerShell | Fetches and runs brainrot.vbs |
 | `launch-rs` | PowerShell | Roblox Studio project launcher |
 | `clean.bat` | Batch | Löscht Temp-Dateien (User-Temp und `C:\Windows\Temp`) |
+| `autoKeyInstallation.bat` | Batch | Windows-Aktivierung per KMS (`slmgr`) |
 
 ### Key Files
 
 - `index.html` — all page structure and content
 - `styles.css` — CSS variables, animations, responsive layout
 - `scripts.js` — typing animation, key loading, copy buttons, particle effect
+
+## Hosting-Migration (geplant)
+
+Das Repo zieht bald von GitHub nach OneDev (`git.spizza.cc`), die Seite wird selbst gehostet und verschwindet von GitHub Pages. Dann entfällt `.github/workflows/static.yml`; Deployment-Weg wird dort neu festgelegt.
