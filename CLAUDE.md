@@ -31,6 +31,7 @@ Plain-text scripts served directly at `spizza.cc/<filename>` — meant to be pip
 | `ps` | PowerShell | Prank script |
 | `brainrot` | PowerShell | Fetches and runs brainrot.vbs |
 | `launch-rs` | PowerShell | Roblox Studio project launcher |
+| `clean.bat` | Batch | Löscht Temp-Dateien (User-Temp und `C:\Windows\Temp`) |
 
 ### Key Files
 
