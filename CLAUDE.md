@@ -12,15 +12,19 @@ reines HTML/CSS/JS, deployed via GitHub Pages (`.github/workflows/static.yml`, P
 
 ### Website (index.html / scripts.js / styles.css)
 
-Single-Page („Journey“): ein gepinnter, scroll-gesteuerter Szenenlauf mit 6 Kapiteln
-(Hero, About, Skills, Projects, Contact, Utilities). Bewusst **nur Google Fonts** als
-externe Abhängigkeit; keine Frameworks (kein Bootstrap/AOS/Font Awesome/Prism – wurde
+Klassischer Dokumentenfluss: Hero + echte Sektionen (About, Skills, Projects,
+Contact, Utilities), Footer. Hintergrund sind **statische** Layered Radial-Gradients
+(kein animiertes `filter:blur()`, keine `backdrop-filter`), Sektionen erscheinen per
+IntersectionObserver (nur `transform`/`opacity`). Bewusst **nur Google Fonts** als
+externe Abhängigkeit; keine Frameworks (kein Bootstrap/AOS/Font Awesome/Prism –
 2026-10-30 entfernt). Icons sind als Inline-SVG-Sprite (`<symbol>`-Defs) in `index.html`.
 
-- Deep-Links: Kapitel per `#about`, `#skills`, `#projects`, `#contact`, `#utilities`
-  erreichbar; `scripts.js` mappt Hash ↔ Scroll-Position (`CHAPTER_SLUGS`).
-- `prefers-reduced-motion`: Szene entpinnt zu normal gestapelter Longpage
-  (`journey--static`), Typing-Effekt entfällt.
+- Deep-Links: Sektionen sind echte Anker `#about`, `#skills`, `#projects`, `#contact`,
+  `#utilities`; native Browser-Anchor-Navigation, kein JS-Routing nötig.
+- **Lighthouse-Leitplanken (wegen Lag-Beschwerde 2026-10-30):** keine Scroll-Listener
+  mit Layout-Reads, keine Dauer-rAF-Loops, keine animierten Blur-/Glass-Flächen.
+  Reveal und Scroll-Spy laufen über IntersectionObserver, Nav-Shrink über Sentinel-IO.
+- `prefers-reduced-motion`: alle Animationen aus, Inhalte sofort sichtbar.
 - `scripts.js` lädt den `ssh`-File vom eigenen Origin in die Utilities-Zeile;
   Copy-Buttons schreiben den vollständigen Inhalt in die Clipboard-API.
 

@@ -4,16 +4,9 @@
 const reduceMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
-const canHover = window.matchMedia("(hover: hover)").matches;
-
-const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
-
-// Chapter slugs for shareable deep links (#about, #skills, ...).
-// Index matches data-ch / data-chapter.
-const CHAPTER_SLUGS = ["home", "about", "skills", "projects", "contact", "utilities"];
 
 // =============================================
-// FILE LOADING - SSH keys
+// FILE LOADING - SSH public key
 // =============================================
 async function loadFileContent(filePath, elementId) {
   const el = document.getElementById(elementId);
@@ -56,257 +49,131 @@ function copyToClipboard(elementId, button) {
 }
 
 // =============================================
-// TYPING ANIMATION (intro chapter)
+// TYPING ANIMATION (hero)
 // =============================================
 const typingEl = document.querySelector(".typing-text");
-const phrases = [
-  "Full Stack Developer",
-  "DevOps Engineer",
-  "Network Administrator",
-];
-let pIdx = 0,
-  cIdx = 0,
-  deleting = false;
+const phrases = ["Full Stack Developer", "DevOps Engineer", "Network Administrator"];
 
-function typeEffect() {
+function startTyping() {
   if (!typingEl) return;
-  const phrase = phrases[pIdx];
-  if (!deleting) {
-    typingEl.textContent = phrase.substring(0, cIdx + 1);
-    cIdx++;
-    if (cIdx === phrase.length) {
-      deleting = true;
-      return setTimeout(typeEffect, 1400);
-    }
-  } else {
-    typingEl.textContent = phrase.substring(0, cIdx - 1);
-    cIdx--;
-    if (cIdx === 0) {
-      deleting = false;
-      pIdx = (pIdx + 1) % phrases.length;
-      return setTimeout(typeEffect, 350);
-    }
-  }
-  setTimeout(typeEffect, deleting ? 42 : 88);
-}
-
-// =============================================
-// MAGNETIC BUTTONS (pointer devices only)
-// =============================================
-if (!reduceMotion && canHover) {
-  document.querySelectorAll(".btn-magnetic").forEach((btn) => {
-    btn.addEventListener("mousemove", (e) => {
-      const r = btn.getBoundingClientRect();
-      const x = (e.clientX - r.left - r.width / 2) * 0.24;
-      const y = (e.clientY - r.top - r.height / 2) * 0.24;
-      btn.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    btn.addEventListener("mouseleave", () => {
-      btn.style.transition = "transform 0.45s cubic-bezier(0.16,1,0.3,1)";
-      btn.style.transform = "";
-      setTimeout(() => {
-        btn.style.transition = "";
-      }, 450);
-    });
-  });
-}
-
-// =============================================
-// AURORA PARALLAX (lerped rAF loop, paused when hidden)
-// =============================================
-const blobs = document.querySelectorAll(".aurora__blob");
-if (!reduceMotion && blobs.length) {
-  let tx = 0,
-    ty = 0,
-    cx = 0,
-    cy = 0;
-  document.addEventListener(
-    "mousemove",
-    (e) => {
-      tx = e.clientX / window.innerWidth - 0.5;
-      ty = e.clientY / window.innerHeight - 0.5;
-    },
-    { passive: true },
-  );
-  (function blobLoop() {
-    if (!document.hidden) {
-      cx += (tx - cx) * 0.04;
-      cy += (ty - cy) * 0.04;
-      blobs.forEach((blob, i) => {
-        const d = (i + 1) * 34;
-        blob.style.translate = `${cx * d}px ${cy * d}px`;
-      });
-    }
-    requestAnimationFrame(blobLoop);
-  })();
-}
-
-// =============================================
-// THE JOURNEY - scroll-scrubbed prism + synced chapters
-// =============================================
-const journey = document.querySelector(".journey");
-const navChapterLinks = Array.from(
-  document.querySelectorAll(".nav__link[data-chapter]"),
-);
-let goToChapter = null;
-let updateJourney = null;
-let activeChapter = 0;
-
-(function initJourney() {
-  if (!journey) return;
-
-  const object = journey.querySelector(".object");
-  const faces = Array.from(journey.querySelectorAll(".object__face"));
-  const chapters = Array.from(journey.querySelectorAll(".chapter"));
-  const dots = Array.from(journey.querySelectorAll(".rail__dot"));
-  const steps = chapters.length - 1;
-
-  function setActive(idx) {
-    activeChapter = idx;
-    faces.forEach((f, k) => f.classList.toggle("is-active", k === idx));
-    chapters.forEach((c, k) => c.classList.toggle("is-active", k === idx));
-    dots.forEach((d, k) => d.classList.toggle("is-active", k === idx));
-    navChapterLinks.forEach((link) =>
-      link.classList.toggle("is-active", +link.dataset.chapter === idx),
-    );
-  }
-
-  // Reduced motion: drop the pin + rotation, stack chapters as a normal page.
-  if (reduceMotion || !object || steps < 1) {
-    journey.classList.add("journey--static");
-    goToChapter = (i, smooth = true) => {
-      const el = chapters[clamp(i, 0, steps)];
-      if (!el) return;
-      el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
-      setActive(clamp(i, 0, steps));
-    };
+  if (reduceMotion) {
+    typingEl.textContent = phrases[0];
     return;
   }
-
-  let targetRot = 0;
-  let curRot = 0;
-  let lastIdx = -1;
-
-  const innerSetActive = setActive;
-  setActive = function (idx) {
-    if (idx === lastIdx) return;
-    lastIdx = idx;
-    innerSetActive(idx);
-  };
-
-  updateJourney = function (y) {
-    const total = journey.offsetHeight - window.innerHeight;
-    const p = total > 0 ? clamp((y - journey.offsetTop) / total, 0, 1) : 0;
-    const idx = clamp(Math.round(p * steps), 0, steps);
-    targetRot = -idx * 60;
-    setActive(idx);
-  };
-
-  goToChapter = function (i, smooth = true) {
-    const total = journey.offsetHeight - window.innerHeight;
-    window.scrollTo({
-      top: journey.offsetTop + (clamp(i, 0, steps) / steps) * total,
-      behavior: smooth && !reduceMotion ? "smooth" : "auto",
-    });
-  };
-
-  (function spin() {
-    if (!document.hidden) {
-      curRot += (targetRot - curRot) * 0.14;
-      object.style.transform = `perspective(2200px) rotateY(${curRot.toFixed(2)}deg)`;
+  let pIdx = 0,
+    cIdx = 0,
+    deleting = false;
+  (function typeEffect() {
+    const phrase = phrases[pIdx];
+    if (!deleting) {
+      typingEl.textContent = phrase.substring(0, cIdx + 1);
+      cIdx++;
+      if (cIdx === phrase.length) {
+        deleting = true;
+        return setTimeout(typeEffect, 1400);
+      }
+    } else {
+      typingEl.textContent = phrase.substring(0, cIdx - 1);
+      cIdx--;
+      if (cIdx === 0) {
+        deleting = false;
+        pIdx = (pIdx + 1) % phrases.length;
+        return setTimeout(typeEffect, 350);
+      }
     }
-    requestAnimationFrame(spin);
+    setTimeout(typeEffect, deleting ? 42 : 88);
   })();
-
-  updateJourney(window.scrollY);
-})();
-
-// =============================================
-// DEEP LINKS - hash <-> chapter routing
-// =============================================
-function chapterFromHash() {
-  const slug = location.hash.replace(/^#/, "");
-  if (!slug) return null;
-  const i = CHAPTER_SLUGS.indexOf(slug);
-  return i >= 0 ? i : null;
 }
 
-window.addEventListener("hashchange", () => {
-  const idx = chapterFromHash();
-  if (idx !== null && idx !== activeChapter && goToChapter) {
-    goToChapter(idx);
+// =============================================
+// REVEAL ON SCROLL - IntersectionObserver only.
+// No scroll listeners, no layout reads, no blur filters.
+// =============================================
+function initReveal() {
+  const els = document.querySelectorAll("[data-reveal]");
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    els.forEach((el) => el.classList.add("visible"));
+    return;
   }
-});
-
-// =============================================
-// SCROLL - drive chapter rotation
-// =============================================
-const nav = document.querySelector(".nav");
-let scrollTicking = false;
-
-// Keep the URL in sync for deep links, but only once a hash exists
-// (replaceState: scrolling must not spam history, clean URLs stay clean,
-// and a deep-link hash is never clobbered before the initial jump).
-function syncHash() {
-  const slug = "#" + CHAPTER_SLUGS[activeChapter];
-  if (location.hash && location.hash !== slug) history.replaceState(null, "", slug);
-}
-
-window.addEventListener(
-  "scroll",
-  () => {
-    if (!scrollTicking) {
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        nav?.classList.toggle("scrolled", y > 40);
-        if (updateJourney) updateJourney(y);
-        syncHash();
-        scrollTicking = false;
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry, i) => {
+        if (!entry.isIntersecting) return;
+        entry.target.style.setProperty("--reveal-delay", i * 70 + "ms");
+        entry.target.classList.add("visible");
+        io.unobserve(entry.target);
       });
-      scrollTicking = true;
-    }
-  },
-  { passive: true },
-);
-
-// =============================================
-// NAVIGATION - chapter jumps + smooth anchors + mobile toggle
-// =============================================
-const navLinksEl = document.querySelector(".nav__links");
-const navToggle = document.querySelector(".nav__toggle");
-
-function closeMobileNav() {
-  navLinksEl?.classList.remove("open");
-  navToggle?.setAttribute("aria-expanded", "false");
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+  );
+  els.forEach((el) => io.observe(el));
 }
 
-// Chapter jumps (nav links, logo, rail dots, in-chapter CTAs)
-document.querySelectorAll("[data-chapter]").forEach((el) => {
-  el.addEventListener("click", (e) => {
-    e.preventDefault();
-    const idx = +el.dataset.chapter;
-    if (goToChapter) goToChapter(idx);
-    const slug = "#" + CHAPTER_SLUGS[idx];
-    if (location.hash !== slug) history.pushState(null, "", slug);
-    closeMobileNav();
-  });
-});
+// =============================================
+// SCROLL SPY - active nav link via one observer
+// =============================================
+function initScrollSpy() {
+  const links = Array.from(document.querySelectorAll(".nav__link"));
+  const byId = {};
+  links.forEach((l) => (byId[l.getAttribute("href").slice(1)] = l));
+  const sections = ["home", "about", "skills", "projects", "contact", "utilities"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+  if (!sections.length || !("IntersectionObserver" in window)) return;
 
-// Plain anchor links (e.g. skip link) - smooth scroll
-document.querySelectorAll('a[href^="#"]:not([data-chapter])').forEach((a) => {
-  a.addEventListener("click", (e) => {
-    const target = document.querySelector(a.getAttribute("href"));
-    if (!target) return;
-    e.preventDefault();
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
-    closeMobileNav();
-  });
-});
+  let active = null;
+  function setActive(id) {
+    if (active === id) return;
+    active = id;
+    links.forEach((l) => l.classList.remove("is-active"));
+    byId[id]?.classList.add("is-active");
+  }
 
-navToggle?.addEventListener("click", () => {
-  const open = navLinksEl.classList.toggle("open");
-  navToggle.setAttribute("aria-expanded", String(open));
-});
+  // "home" is the <main> anchor (top of page)
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    },
+    { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+  );
+  sections.forEach((s) => spy.observe(s));
+}
+
+// =============================================
+// NAV - compact when scrolled (class toggle only)
+// =============================================
+function initNavShrink() {
+  const nav = document.querySelector(".nav");
+  if (!nav || !("IntersectionObserver" in window)) return;
+  const sentinel = document.createElement("div");
+  sentinel.style.cssText = "position:absolute;top:48px;left:0;width:1px;height:1px;pointer-events:none";
+  document.body.prepend(sentinel);
+  new IntersectionObserver(
+    (entries) => nav.classList.toggle("scrolled", !entries[0].isIntersecting),
+    { threshold: 0 },
+  ).observe(sentinel);
+}
+
+// =============================================
+// MOBILE NAV TOGGLE
+// =============================================
+function initMobileNav() {
+  const links = document.querySelector(".nav__links");
+  const toggle = document.querySelector(".nav__toggle");
+  if (!links || !toggle) return;
+  toggle.addEventListener("click", () => {
+    const open = links.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+  links.addEventListener("click", (e) => {
+    if (e.target.closest("a")) {
+      links.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
 
 // =============================================
 // INIT
@@ -316,18 +183,9 @@ window.addEventListener("DOMContentLoaded", () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   loadFileContent("ssh", "sshCode");
-
-  if (reduceMotion && typingEl) {
-    typingEl.textContent = phrases[0];
-  } else {
-    setTimeout(typeEffect, 900);
-  }
-
-  // Deep link on load: jump straight to the requested chapter.
-  const idx = chapterFromHash();
-  if (idx && idx !== 0) {
-    requestAnimationFrame(() => {
-      goToChapter && goToChapter(idx, false);
-    });
-  }
+  startTyping();
+  initReveal();
+  initScrollSpy();
+  initNavShrink();
+  initMobileNav();
 });

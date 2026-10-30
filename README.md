@@ -6,16 +6,18 @@ deployt via GitHub Pages (`.github/workflows/static.yml` bei Push auf `main`).
 
 ## Website
 
-- `index.html` – kompletter Seiteninhalt (Single-Page mit „Journey“-Szenenlauf)
-- `styles.css` – Design (Glass/aurora), Responsive, Reduced-Motion
-- `scripts.js` – Scroll-/Kapitel-Steuerung, Deep-Links, Copy-Buttons, SSH-Fetch
+- `index.html` – kompletter Seiteninhalt (Hero + echte Sektionen: About, Skills, Projects, Contact, Utilities)
+- `styles.css` – Design (dunkel, Eis-Zyan-Akkord), Responsive, Reduced-Motion
+- `scripts.js` – Scroll-Reveal (IntersectionObserver), Scroll-Spy, Copy-Buttons, SSH-Fetch
 - Icons: Inline-SVG-Sprite in `index.html` – bewusst **kein** Font Awesome / Bootstrap / Prism
+- **Performance-Regeln:** kein `backdrop-filter`, keine animierten `filter:blur()`-Flächen,
+  keine Scroll-Handler mit Layout-Reads (`offsetHeight`); Animationen nur mit `transform`/`opacity`
 
 ### Deep-Links
 
-Die Kapitel sind direkt verlinkbar: `#home`, `#about`, `#skills`, `#projects`,
-`#contact`, `#utilities`. Ohne JS/Animation (`prefers-reduced-motion`) wird die
-Seite zu einem normal gestapelten Longpage.
+Die Sektionen sind echte Anker und direkt verlinkbar: `#home`, `#about`, `#skills`,
+`#projects`, `#contact`, `#utilities`. Ohne JS ist die Seite vollständig lesbar;
+`prefers-reduced-motion` schaltet alle Animationen ab.
 
 ### Branding / Favicon
 
@@ -52,6 +54,11 @@ Beispiel:
 ```powershell
 irm https://spizza.cc/windows-repair | iex
 ```
+
+## Benchmark
+
+`tools/bench-lighthouse.sh [alter-commit]` vergleicht die Lighthouse-Performance
+von altem und neuem Design lokal (Chromium + Lighthouse müssen installiert sein).
 
 ## Lizenz
 

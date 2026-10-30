@@ -35,7 +35,7 @@
     }
   </script>
 
-  <!-- Fonts: Space Grotesk (display) + Inter (body) + Roboto Mono (code) - only the weights actually used -->
+  <!-- Fonts: only the weights actually used -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap" rel="stylesheet" />
@@ -59,7 +59,7 @@
 </head>
 
 <body>
-  <!-- SVG sprite (replaces Font Awesome; no CDN needed) -->
+  <!-- SVG icon sprite (no icon CDN) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
       <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -69,6 +69,9 @@
         <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
         <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
         <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
       </symbol>
       <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" />
@@ -99,186 +102,205 @@
       <symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor">
         <path d="M0 0h11.377v11.372H0zm12.623 0H24v11.372H12.623zM0 12.623h11.377V24H0zm12.623 0H24V24H12.623z" />
       </symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
+      </symbol>
     </defs>
   </svg>
 
   <a class="skip-link" href="#home">Skip to content</a>
 
-  <!-- Animated aurora backdrop -->
-  <div class="aurora" aria-hidden="true">
-    <span class="aurora__blob aurora__blob--1"></span>
-    <span class="aurora__blob aurora__blob--2"></span>
-    <span class="aurora__blob aurora__blob--3"></span>
-  </div>
+  <!-- Static backdrop: layered gradients, painted once, never animated -->
+  <div class="backdrop" aria-hidden="true"></div>
   <div class="grid-veil" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
 
-  <!-- Navigation (real anchors: every entry is a shareable deep link) -->
+  <!-- Navigation -->
   <nav class="nav" aria-label="Main navigation">
-    <div class="nav__shell glass">
-      <a href="#home" class="nav__logo" data-chapter="0" aria-label="Markus Spitzer - Home">
+    <div class="nav__shell">
+      <a href="#home" class="nav__logo" aria-label="Markus Spitzer - Home">
         <span class="nav__logo-mark">MS</span>
       </a>
       <ul class="nav__links" role="list">
-        <li><a href="#home" class="nav__link is-active" data-chapter="0">Home</a></li>
-        <li><a href="#about" class="nav__link" data-chapter="1">About</a></li>
-        <li><a href="#skills" class="nav__link" data-chapter="2">Skills</a></li>
-        <li><a href="#projects" class="nav__link" data-chapter="3">Projects</a></li>
-        <li><a href="#contact" class="nav__link" data-chapter="4">Contact</a></li>
-        <li><a href="#utilities" class="nav__link" data-chapter="5">Utilities</a></li>
+        <li><a href="#home" class="nav__link is-active">Home</a></li>
+        <li><a href="#about" class="nav__link">About</a></li>
+        <li><a href="#skills" class="nav__link">Skills</a></li>
+        <li><a href="#projects" class="nav__link">Projects</a></li>
+        <li><a href="#contact" class="nav__link">Contact</a></li>
+        <li><a href="#utilities" class="nav__link">Utilities</a></li>
       </ul>
-      <a href="#contact" class="nav__cta btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
+      <a href="#contact" class="nav__cta btn btn--primary">Get in Touch</a>
       <button class="nav__toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
-  <!-- ============================================================
-       THE JOURNEY - one pinned, scroll-rotated scene.
-       The glass prism rotates through 6 chapters; each chapter's
-       content crossfades in beneath it. Chapters are deep-linkable
-       via #about, #skills, #projects, #contact, #utilities.
-       ============================================================ -->
-  <section id="home" class="journey">
-    <div class="journey__sticky">
-
-      <!-- Rotating glass object (hexagonal prism, one face per chapter) -->
-      <div class="stage" aria-hidden="true">
-        <div class="object">
-          <div class="object__face is-active"><span class="object__mark">MS</span></div>
-          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-user" /></svg></div>
-          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-layers" /></svg></div>
-          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg></div>
-          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-send" /></svg></div>
-          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-key" /></svg></div>
-        </div>
-        <div class="stage__glow"></div>
-      </div>
-
-      <!-- Chapter content (crossfades, synced to the rotation) -->
-      <div class="chapters">
-
-        <article class="chapter is-active" data-ch="0">
-          <p class="ch__eyebrow">Full-stack developer &amp; infrastructure engineer</p>
-          <h1 class="ch__name">Markus Spitzer</h1>
-          <p class="ch__role"><span class="typing-text"></span><span class="caret" aria-hidden="true"></span></p>
-          <div class="ch__actions">
-            <a href="#contact" class="btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
+  <main>
+    <!-- ================= HERO ================= -->
+    <section id="home" class="hero" aria-label="Intro">
+      <div class="hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Full-stack developer &amp; infrastructure engineer</p>
+          <h1 class="hero__name">Markus Spitzer</h1>
+          <p class="hero__role"><span class="typing-text"></span><span class="caret" aria-hidden="true"></span></p>
+          <div class="hero__actions">
+            <a href="#contact" class="btn btn--primary">Get in Touch</a>
             <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="btn btn--ghost">
               <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> GitHub
             </a>
           </div>
-        </article>
-
-        <article class="chapter" data-ch="1" id="about">
-          <span class="ch__num">01 / 05</span>
-          <h2 class="ch__title">About</h2>
-          <p class="ch__text">
-            Infrastructure-minded developer from Austria with 7+ years of experience. I design, deploy,
-            and run production-grade self-hosted environments that stay up around the clock.
+          <p class="hero__meta">
+            <span class="dot" aria-hidden="true"></span> Austria · available for projects
           </p>
-          <div class="ch__chips">
-            <span class="tag">7+ years coding</span>
-            <span class="tag">50+ projects</span>
-            <span class="tag">24/7 home lab</span>
-            <span class="tag">NixOS · Arch · Alpine</span>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <div class="float-card">
+            <span class="float-card__mark">MS</span>
+            <span class="float-card__sub">spizza.cc</span>
           </div>
-        </article>
+        </div>
+      </div>
+    </section>
 
-        <article class="chapter" data-ch="2" id="skills">
-          <span class="ch__num">02 / 05</span>
-          <h2 class="ch__title">Skills</h2>
-          <p class="ch__text">A full-stack toolkit across development, DevOps, and infrastructure.</p>
-          <div class="ch__chips">
-            <span class="tag">Go</span><span class="tag">Python</span><span class="tag">TypeScript</span>
-            <span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">NixOS</span>
-            <span class="tag">Proxmox</span><span class="tag">PostgreSQL</span><span class="tag">Redis</span>
-            <span class="tag">Angular</span><span class="tag">NestJS</span><span class="tag">CI/CD</span>
-            <span class="tag">Tailscale</span><span class="tag">Lua</span>
-          </div>
-        </article>
-
-        <article class="chapter" data-ch="3" id="projects">
-          <span class="ch__num">03 / 05</span>
-          <h2 class="ch__title">Projects</h2>
-          <p class="ch__text">
-            A curated showcase is on the way. For now, my infrastructure, web, and game work all lives on GitHub.
+    <!-- ================= ABOUT ================= -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="section-head" data-reveal>
+          <svg class="ic" aria-hidden="true"><use href="#i-user" /></svg> About
+        </h2>
+        <div class="about-grid">
+          <p class="lead" data-reveal>
+            Infrastructure-minded developer from Austria with <strong>7+ years</strong> of experience.
+            I design, deploy, and run production-grade self-hosted environments that stay up
+            around the clock — from Proxmox clusters and network fabric to the services on top.
           </p>
-          <div class="ch__actions">
-            <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="btn btn--primary btn-magnetic">
-              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> Visit my GitHub
+          <ul class="stats" role="list" data-reveal>
+            <li class="stat card"><span class="stat__num">7+</span><span class="stat__lbl">years coding</span></li>
+            <li class="stat card"><span class="stat__num">50+</span><span class="stat__lbl">projects</span></li>
+            <li class="stat card"><span class="stat__num">24/7</span><span class="stat__lbl">home lab uptime</span></li>
+            <li class="stat card"><span class="stat__num">3</span><span class="stat__lbl">Linux distros on desktop</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SKILLS ================= -->
+    <section id="skills" class="section">
+      <div class="container">
+        <h2 class="section-head" data-reveal>
+          <svg class="ic" aria-hidden="true"><use href="#i-layers" /></svg> Skills
+        </h2>
+        <div class="skill-cols">
+          <div class="card skill-col" data-reveal>
+            <h3 class="skill-col__title"><svg class="ic" aria-hidden="true"><use href="#i-terminal" /></svg> Languages</h3>
+            <div class="chips">
+              <span class="tag">Go</span><span class="tag">Python</span><span class="tag">TypeScript</span>
+              <span class="tag">PowerShell</span><span class="tag">Bash</span><span class="tag">Lua</span>
+            </div>
+          </div>
+          <div class="card skill-col" data-reveal>
+            <h3 class="skill-col__title"><svg class="ic" aria-hidden="true"><use href="#i-layers" /></svg> DevOps &amp; Infra</h3>
+            <div class="chips">
+              <span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">NixOS</span>
+              <span class="tag">Proxmox</span><span class="tag">CI/CD</span><span class="tag">Tailscale</span>
+              <span class="tag">PostgreSQL</span><span class="tag">Redis</span>
+            </div>
+          </div>
+          <div class="card skill-col" data-reveal>
+            <h3 class="skill-col__title"><svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> Web &amp; Apps</h3>
+            <div class="chips">
+              <span class="tag">Angular</span><span class="tag">NestJS</span><span class="tag">Node.js</span>
+              <span class="tag">Game dev</span><span class="tag">Roblox</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= PROJECTS ================= -->
+    <section id="projects" class="section">
+      <div class="container">
+        <h2 class="section-head" data-reveal>
+          <svg class="ic" aria-hidden="true"><use href="#i-folder" /></svg> Projects
+        </h2>
+        <p class="section-sub" data-reveal>A curated showcase is on the way — until then, everything lives on GitHub.</p>
+        <div class="proj-grid">
+          <a class="card proj" href="https://github.com/spizzadev" target="_blank" rel="noopener" data-reveal>
+            <span class="proj__icon"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg></span>
+            <h3 class="proj__title">GitHub @spizzadev</h3>
+            <p class="proj__text">Infrastructure, web and game work — all of it in one place.</p>
+            <span class="proj__link">Visit GitHub →</span>
+          </a>
+          <a class="card proj" href="https://github.com/spizzadev/Public-Util" target="_blank" rel="noopener" data-reveal>
+            <span class="proj__icon"><svg class="ic" aria-hidden="true"><use href="#i-terminal" /></svg></span>
+            <h3 class="proj__title">Public-Util</h3>
+            <p class="proj__text">This site plus the public setup scripts hosted right here.</p>
+            <span class="proj__link">View repository →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2 class="section-head" data-reveal>
+          <svg class="ic" aria-hidden="true"><use href="#i-send" /></svg> Get in touch
+        </h2>
+        <p class="section-sub" data-reveal>Open to new projects, ideas, or a chance to be part of your vision.</p>
+        <div class="chips" data-reveal>
+          <a href="mailto:markus@spizza.cc" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg> markus@spizza.cc</a>
+          <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> spizzadev</a>
+          <a href="https://www.linkedin.com/in/spizza" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-linkedin" /></svg> in/spizza</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= UTILITIES ================= -->
+    <section id="utilities" class="section">
+      <div class="container">
+        <h2 class="section-head" data-reveal>
+          <svg class="ic" aria-hidden="true"><use href="#i-key" /></svg> Utilities
+        </h2>
+        <p class="section-sub" data-reveal>Public keys and scripts. Copy and run.</p>
+        <div class="utils" data-reveal>
+          <div class="util-line card">
+            <svg class="ic" aria-hidden="true"><use href="#i-key" /></svg>
+            <div class="util-line__info">
+              <span class="util-line__name">SSH Key</span>
+              <span class="util-line__sub">Public key</span>
+            </div>
+            <code id="sshCode" class="util-line__val">Loading…</code>
+            <button class="btn btn--sm" type="button" onclick="copyToClipboard('sshCode', this)">
+              <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
+            </button>
+          </div>
+          <div class="util-line card">
+            <svg class="ic" aria-hidden="true"><use href="#i-windows" /></svg>
+            <div class="util-line__info">
+              <span class="util-line__name">Windows Repair</span>
+              <span class="util-line__sub">DISM, SFC and chkdsk</span>
+            </div>
+            <code id="windowsRepairCode" class="util-line__val">irm https://spizza.cc/windows-repair | iex</code>
+            <button class="btn btn--sm" type="button" onclick="copyToClipboard('windowsRepairCode', this)">
+              <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
+            </button>
+          </div>
+          <div class="util-line card">
+            <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+            <div class="util-line__info">
+              <span class="util-line__name">Public-Util</span>
+              <span class="util-line__sub">All hosted scripts</span>
+            </div>
+            <code class="util-line__val">github.com/spizzadev/Public-Util</code>
+            <a class="btn btn--sm" href="https://github.com/spizzadev/Public-Util" target="_blank" rel="noopener">
+              <svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> Open
             </a>
           </div>
-        </article>
-
-        <article class="chapter" data-ch="4" id="contact">
-          <span class="ch__num">04 / 05</span>
-          <h2 class="ch__title">Get in touch</h2>
-          <p class="ch__text">Open to new projects, ideas, or a chance to be part of your vision.</p>
-          <div class="ch__chips">
-            <a href="mailto:markus@spizza.cc" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg> markus@spizza.cc</a>
-            <a href="https://spizza.cc" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> spizza.cc</a>
-            <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> spizzadev</a>
-            <a href="https://www.linkedin.com/in/spizza" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-linkedin" /></svg> in/spizza</a>
-          </div>
-        </article>
-
-        <article class="chapter" data-ch="5" id="utilities">
-          <span class="ch__num">05 / 05</span>
-          <h2 class="ch__title">Utilities</h2>
-          <p class="ch__text">Public keys and scripts. Copy and run.</p>
-          <div class="ch__utils">
-            <div class="util-line glass">
-              <svg class="ic" aria-hidden="true"><use href="#i-key" /></svg>
-              <div class="util-line__info">
-                <span class="util-line__name">SSH Key</span>
-                <span class="util-line__sub">Public key</span>
-              </div>
-              <code id="sshCode" class="util-line__val">Loading…</code>
-              <button class="btn btn--sm" type="button" onclick="copyToClipboard('sshCode', this)">
-                <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
-              </button>
-            </div>
-            <div class="util-line glass">
-              <svg class="ic" aria-hidden="true"><use href="#i-windows" /></svg>
-              <div class="util-line__info">
-                <span class="util-line__name">Windows Repair</span>
-                <span class="util-line__sub">DISM, SFC and chkdsk</span>
-              </div>
-              <code id="windowsRepairCode" class="util-line__val">irm https://spizza.cc/windows-repair | iex</code>
-              <button class="btn btn--sm" type="button" onclick="copyToClipboard('windowsRepairCode', this)">
-                <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
-              </button>
-            </div>
-            <div class="util-line glass">
-              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
-              <div class="util-line__info">
-                <span class="util-line__name">Public-Util</span>
-                <span class="util-line__sub">All hosted scripts</span>
-              </div>
-              <code class="util-line__val">github.com/spizzadev/Public-Util</code>
-              <a class="btn btn--sm" href="https://github.com/spizzadev/Public-Util" target="_blank" rel="noopener">
-                <svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> Open
-              </a>
-            </div>
-          </div>
-        </article>
-
+        </div>
       </div>
-
-      <!-- Progress rail (clickable chapter nav) -->
-      <div class="rail" aria-label="Chapters">
-        <button class="rail__dot is-active" type="button" data-chapter="0" aria-label="Intro" title="Home"></button>
-        <button class="rail__dot" type="button" data-chapter="1" aria-label="About" title="About"></button>
-        <button class="rail__dot" type="button" data-chapter="2" aria-label="Skills" title="Skills"></button>
-        <button class="rail__dot" type="button" data-chapter="3" aria-label="Projects" title="Projects"></button>
-        <button class="rail__dot" type="button" data-chapter="4" aria-label="Contact" title="Contact"></button>
-        <button class="rail__dot" type="button" data-chapter="5" aria-label="Utilities" title="Utilities"></button>
-      </div>
-
-    </div>
-  </section>
+    </section>
+  </main>
 
   <!-- Footer -->
   <footer class="footer">
