@@ -4,9 +4,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markus Spitzer | Developer &amp; Infrastructure Engineer</title>
   <meta name="description" content="Markus Spitzer - full-stack developer and infrastructure engineer from Austria. DevOps, home lab, NixOS, and game development." />
+  <link rel="canonical" href="https://spizza.cc/" />
   <meta name="theme-color" content="#070b14" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Social embeds -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="spizza.cc" />
+  <meta property="og:title" content="Markus Spitzer | Developer & Infrastructure Engineer" />
+  <meta property="og:description" content="Full-stack developer and infrastructure engineer from Austria. DevOps, home lab, NixOS, and game development." />
+  <meta property="og:url" content="https://spizza.cc/" />
+  <meta property="og:image" content="https://spizza.cc/icon-512.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Markus Spitzer | Developer & Infrastructure Engineer" />
+  <meta name="twitter:description" content="Full-stack developer and infrastructure engineer from Austria." />
+  <meta name="twitter:image" content="https://spizza.cc/icon-512.png" />
+
+  <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="alternate icon" sizes="any" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
 
   <script>
     if (window.location.protocol !== "https:" && window.location.hostname !== "localhost") {
@@ -14,23 +35,75 @@
     }
   </script>
 
-  <!-- Fonts: Space Grotesk (display) + Inter (body) + Roboto Mono (code) -->
+  <!-- Fonts: Space Grotesk (display) + Inter (body) + Roboto Mono (code) - only the weights actually used -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-  <!-- Prism.js CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=Roboto+Mono&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css" />
 
-  <title>Markus Spitzer | Developer & Infrastructure Engineer</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Markus Spitzer",
+    "jobTitle": "Developer & Infrastructure Engineer",
+    "url": "https://spizza.cc",
+    "email": "mailto:markus@spizza.cc",
+    "sameAs": [
+      "https://github.com/spizzadev",
+      "https://www.linkedin.com/in/spizza"
+    ]
+  }
+  </script>
 </head>
 
 <body>
+  <!-- SVG sprite (replaces Font Awesome; no CDN needed) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="7" r="4" /><path d="M20 21a8 8 0 1 0-16 0" />
+      </symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+        <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+        <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+      </symbol>
+      <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" />
+      </symbol>
+      <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4" />
+        <path d="m21 2-9.6 9.6" /><circle cx="7.5" cy="15.5" r="5.5" />
+      </symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5" />
+      </symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" />
+      </symbol>
+      <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+      </symbol>
+      <symbol id="i-linkedin" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      </symbol>
+      <symbol id="i-windows" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M0 0h11.377v11.372H0zm12.623 0H24v11.372H12.623zM0 12.623h11.377V24H0zm12.623 0H24V24H12.623z" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#home">Skip to content</a>
+
   <!-- Animated aurora backdrop -->
   <div class="aurora" aria-hidden="true">
     <span class="aurora__blob aurora__blob--1"></span>
@@ -40,22 +113,22 @@
   <div class="grid-veil" aria-hidden="true"></div>
   <div class="grain" aria-hidden="true"></div>
 
-  <!-- Navigation -->
-  <nav class="nav" role="navigation" aria-label="Main navigation">
+  <!-- Navigation (real anchors: every entry is a shareable deep link) -->
+  <nav class="nav" aria-label="Main navigation">
     <div class="nav__shell glass">
-      <a href="#home" class="nav__logo" data-chapter="0">
+      <a href="#home" class="nav__logo" data-chapter="0" aria-label="Markus Spitzer - Home">
         <span class="nav__logo-mark">MS</span>
       </a>
       <ul class="nav__links" role="list">
         <li><a href="#home" class="nav__link is-active" data-chapter="0">Home</a></li>
-        <li><a href="#home" class="nav__link" data-chapter="1">About</a></li>
-        <li><a href="#home" class="nav__link" data-chapter="2">Skills</a></li>
-        <li><a href="#home" class="nav__link" data-chapter="3">Projects</a></li>
-        <li><a href="#home" class="nav__link" data-chapter="4">Contact</a></li>
-        <li><a href="#home" class="nav__link" data-chapter="5">Utilities</a></li>
+        <li><a href="#about" class="nav__link" data-chapter="1">About</a></li>
+        <li><a href="#skills" class="nav__link" data-chapter="2">Skills</a></li>
+        <li><a href="#projects" class="nav__link" data-chapter="3">Projects</a></li>
+        <li><a href="#contact" class="nav__link" data-chapter="4">Contact</a></li>
+        <li><a href="#utilities" class="nav__link" data-chapter="5">Utilities</a></li>
       </ul>
-      <a href="#home" class="nav__cta btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
-      <button class="nav__toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <a href="#contact" class="nav__cta btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
+      <button class="nav__toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -63,21 +136,22 @@
 
   <!-- ============================================================
        THE JOURNEY - one pinned, scroll-rotated scene.
-       The glass object rotates through 5 chapters; each chapter's
-       content crossfades in beneath it.
+       The glass prism rotates through 6 chapters; each chapter's
+       content crossfades in beneath it. Chapters are deep-linkable
+       via #about, #skills, #projects, #contact, #utilities.
        ============================================================ -->
   <section id="home" class="journey">
     <div class="journey__sticky">
 
-      <!-- Rotating glass object (pentagonal prism, one face per chapter) -->
+      <!-- Rotating glass object (hexagonal prism, one face per chapter) -->
       <div class="stage" aria-hidden="true">
         <div class="object">
           <div class="object__face is-active"><span class="object__mark">MS</span></div>
-          <div class="object__face"><i class="fas fa-user-astronaut"></i></div>
-          <div class="object__face"><i class="fas fa-layer-group"></i></div>
-          <div class="object__face"><i class="fab fa-github"></i></div>
-          <div class="object__face"><i class="fas fa-paper-plane"></i></div>
-          <div class="object__face"><i class="fas fa-key" aria-hidden="true"></i></div>
+          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-user" /></svg></div>
+          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-layers" /></svg></div>
+          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg></div>
+          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-send" /></svg></div>
+          <div class="object__face"><svg class="ic" aria-hidden="true"><use href="#i-key" /></svg></div>
         </div>
         <div class="stage__glow"></div>
       </div>
@@ -90,14 +164,14 @@
           <h1 class="ch__name">Markus Spitzer</h1>
           <p class="ch__role"><span class="typing-text"></span><span class="caret" aria-hidden="true"></span></p>
           <div class="ch__actions">
-            <a href="#home" class="btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
+            <a href="#contact" class="btn btn--primary btn-magnetic" data-chapter="4">Get in Touch</a>
             <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="btn btn--ghost">
-              <i class="fab fa-github" aria-hidden="true"></i> GitHub
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> GitHub
             </a>
           </div>
         </article>
 
-        <article class="chapter" data-ch="1">
+        <article class="chapter" data-ch="1" id="about">
           <span class="ch__num">01 / 05</span>
           <h2 class="ch__title">About</h2>
           <p class="ch__text">
@@ -112,7 +186,7 @@
           </div>
         </article>
 
-        <article class="chapter" data-ch="2">
+        <article class="chapter" data-ch="2" id="skills">
           <span class="ch__num">02 / 05</span>
           <h2 class="ch__title">Skills</h2>
           <p class="ch__text">A full-stack toolkit across development, DevOps, and infrastructure.</p>
@@ -125,7 +199,7 @@
           </div>
         </article>
 
-        <article class="chapter" data-ch="3">
+        <article class="chapter" data-ch="3" id="projects">
           <span class="ch__num">03 / 05</span>
           <h2 class="ch__title">Projects</h2>
           <p class="ch__text">
@@ -133,49 +207,60 @@
           </p>
           <div class="ch__actions">
             <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="btn btn--primary btn-magnetic">
-              <i class="fab fa-github" aria-hidden="true"></i> Visit my GitHub
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> Visit my GitHub
             </a>
           </div>
         </article>
 
-        <article class="chapter" data-ch="4">
+        <article class="chapter" data-ch="4" id="contact">
           <span class="ch__num">04 / 05</span>
           <h2 class="ch__title">Get in touch</h2>
           <p class="ch__text">Open to new projects, ideas, or a chance to be part of your vision.</p>
           <div class="ch__chips">
-            <a href="mailto:markus@spizza.cc" class="tag tag--link"><i class="fas fa-envelope" aria-hidden="true"></i> markus@spizza.cc</a>
-            <a href="https://spizza.cc" target="_blank" rel="noopener" class="tag tag--link"><i class="fas fa-globe" aria-hidden="true"></i> spizza.cc</a>
-            <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="tag tag--link"><i class="fab fa-github" aria-hidden="true"></i> spizzadev</a>
-            <a href="https://www.linkedin.com/in/spizza" target="_blank" rel="noopener" class="tag tag--link"><i class="fab fa-linkedin-in" aria-hidden="true"></i> in/spizza</a>
+            <a href="mailto:markus@spizza.cc" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg> markus@spizza.cc</a>
+            <a href="https://spizza.cc" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> spizza.cc</a>
+            <a href="https://github.com/spizzadev" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> spizzadev</a>
+            <a href="https://www.linkedin.com/in/spizza" target="_blank" rel="noopener" class="tag tag--link"><svg class="ic" aria-hidden="true"><use href="#i-linkedin" /></svg> in/spizza</a>
           </div>
         </article>
 
-        <article class="chapter" data-ch="5">
+        <article class="chapter" data-ch="5" id="utilities">
           <span class="ch__num">05 / 05</span>
           <h2 class="ch__title">Utilities</h2>
           <p class="ch__text">Public keys and scripts. Copy and run.</p>
           <div class="ch__utils">
             <div class="util-line glass">
-              <i class="fas fa-key" aria-hidden="true"></i>
+              <svg class="ic" aria-hidden="true"><use href="#i-key" /></svg>
               <div class="util-line__info">
                 <span class="util-line__name">SSH Key</span>
                 <span class="util-line__sub">Public key</span>
               </div>
-              <code id="sshCode" class="util-line__val language-bash">Loading…</code>
-              <button class="btn btn--sm" onclick="copyToClipboard('sshCode')">
-                <i class="fas fa-copy" aria-hidden="true"></i> Copy
+              <code id="sshCode" class="util-line__val">Loading…</code>
+              <button class="btn btn--sm" type="button" onclick="copyToClipboard('sshCode', this)">
+                <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
               </button>
             </div>
             <div class="util-line glass">
-              <i class="fab fa-windows" aria-hidden="true"></i>
+              <svg class="ic" aria-hidden="true"><use href="#i-windows" /></svg>
               <div class="util-line__info">
                 <span class="util-line__name">Windows Repair</span>
                 <span class="util-line__sub">DISM, SFC and chkdsk</span>
               </div>
-              <code id="windowsRepairCode" class="util-line__val language-powershell">irm https://spizza.cc/windows-repair | iex</code>
-              <button class="btn btn--sm" onclick="copyToClipboard('windowsRepairCode')">
-                <i class="fas fa-copy" aria-hidden="true"></i> Copy
+              <code id="windowsRepairCode" class="util-line__val">irm https://spizza.cc/windows-repair | iex</code>
+              <button class="btn btn--sm" type="button" onclick="copyToClipboard('windowsRepairCode', this)">
+                <svg class="ic" aria-hidden="true"><use href="#i-copy" /></svg> Copy
               </button>
+            </div>
+            <div class="util-line glass">
+              <svg class="ic" aria-hidden="true"><use href="#i-github" /></svg>
+              <div class="util-line__info">
+                <span class="util-line__name">Public-Util</span>
+                <span class="util-line__sub">All hosted scripts</span>
+              </div>
+              <code class="util-line__val">github.com/spizzadev/Public-Util</code>
+              <a class="btn btn--sm" href="https://github.com/spizzadev/Public-Util" target="_blank" rel="noopener">
+                <svg class="ic" aria-hidden="true"><use href="#i-globe" /></svg> Open
+              </a>
             </div>
           </div>
         </article>
@@ -183,22 +268,29 @@
       </div>
 
       <!-- Progress rail (clickable chapter nav) -->
-      <div class="rail" role="tablist" aria-label="Chapters">
-        <button class="rail__dot is-active" data-chapter="0" aria-label="Intro"></button>
-        <button class="rail__dot" data-chapter="1" aria-label="About"></button>
-        <button class="rail__dot" data-chapter="2" aria-label="Skills"></button>
-        <button class="rail__dot" data-chapter="3" aria-label="Projects"></button>
-        <button class="rail__dot" data-chapter="4" aria-label="Contact"></button>
-        <button class="rail__dot" data-chapter="5" aria-label="Utilities"></button>
+      <div class="rail" aria-label="Chapters">
+        <button class="rail__dot is-active" type="button" data-chapter="0" aria-label="Intro" title="Home"></button>
+        <button class="rail__dot" type="button" data-chapter="1" aria-label="About" title="About"></button>
+        <button class="rail__dot" type="button" data-chapter="2" aria-label="Skills" title="Skills"></button>
+        <button class="rail__dot" type="button" data-chapter="3" aria-label="Projects" title="Projects"></button>
+        <button class="rail__dot" type="button" data-chapter="4" aria-label="Contact" title="Contact"></button>
+        <button class="rail__dot" type="button" data-chapter="5" aria-label="Utilities" title="Utilities"></button>
       </div>
 
     </div>
   </section>
 
-  <!-- Prism.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-bash.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-powershell.min.js"></script>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <span>© <span id="year">2026</span> Markus Spitzer</span>
+      <span class="footer__links">
+        <a href="https://github.com/spizzadev" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-github" /></svg> GitHub</a>
+        <a href="mailto:markus@spizza.cc"><svg class="ic" aria-hidden="true"><use href="#i-mail" /></svg> E-Mail</a>
+        <a href="https://www.linkedin.com/in/spizza" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-linkedin" /></svg> LinkedIn</a>
+      </span>
+    </div>
+  </footer>
 
   <script src="scripts.js"></script>
 </body>

@@ -4,51 +4,49 @@
 const reduceMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
+const canHover = window.matchMedia("(hover: hover)").matches;
 
 const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+// Chapter slugs for shareable deep links (#about, #skills, ...).
+// Index matches data-ch / data-chapter.
+const CHAPTER_SLUGS = ["home", "about", "skills", "projects", "contact", "utilities"];
 
 // =============================================
 // FILE LOADING - SSH keys
 // =============================================
 async function loadFileContent(filePath, elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
   try {
     const response = await fetch(filePath);
     if (!response.ok)
       throw new Error(`Failed to load ${filePath}: ${response.statusText}`);
     const content = await response.text();
-    const el = document.getElementById(elementId);
     el.textContent = content.trim();
-    Prism.highlightElement(el);
   } catch (err) {
     console.error(err);
-    document.getElementById(elementId).textContent = "Error loading file.";
+    el.textContent = "Error loading file.";
   }
 }
 
 // =============================================
 // CLIPBOARD - copy button with feedback
 // =============================================
-function copyToClipboard(elementId) {
+function copyToClipboard(elementId, button) {
   const code = document.getElementById(elementId).textContent;
+  if (!button) button = document.activeElement;
+  const origHtml = button.innerHTML;
   navigator.clipboard
     .writeText(code)
     .then(() => {
-      const button = event.target.closest("button");
-      const origNodes = Array.from(button.childNodes).map((n) =>
-        n.cloneNode(true),
-      );
-      button.textContent = "";
-      const icon = document.createElement("i");
-      icon.className = "fas fa-check";
-      icon.setAttribute("aria-hidden", "true");
-      button.appendChild(icon);
-      button.appendChild(document.createTextNode(" Copied!"));
+      button.innerHTML =
+        '<svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg> Copied!';
       button.style.background = "rgba(16,185,129,.16)";
       button.style.borderColor = "rgba(16,185,129,.45)";
       button.style.color = "#6ee7b7";
       setTimeout(() => {
-        button.textContent = "";
-        origNodes.forEach((n) => button.appendChild(n));
+        button.innerHTML = origHtml;
         button.style.background = "";
         button.style.borderColor = "";
         button.style.color = "";
@@ -93,28 +91,9 @@ function typeEffect() {
 }
 
 // =============================================
-// SCROLL REVEAL (flat sections: utilities)
+// MAGNETIC BUTTONS (pointer devices only)
 // =============================================
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const delay = parseInt(entry.target.dataset.delay || "0");
-      entry.target.style.setProperty("--reveal-delay", delay + "ms");
-      entry.target.classList.add("visible");
-      revealObserver.unobserve(entry.target);
-    });
-  },
-  { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
-);
-document
-  .querySelectorAll("[data-reveal]")
-  .forEach((el) => revealObserver.observe(el));
-
-// =============================================
-// MAGNETIC BUTTONS
-// =============================================
-if (!reduceMotion) {
+if (!reduceMotion && canHover) {
   document.querySelectorAll(".btn-magnetic").forEach((btn) => {
     btn.addEventListener("mousemove", (e) => {
       const r = btn.getBoundingClientRect();
@@ -133,7 +112,7 @@ if (!reduceMotion) {
 }
 
 // =============================================
-// AURORA PARALLAX (lerped rAF loop)
+// AURORA PARALLAX (lerped rAF loop, paused when hidden)
 // =============================================
 const blobs = document.querySelectorAll(".aurora__blob");
 if (!reduceMotion && blobs.length) {
@@ -150,12 +129,14 @@ if (!reduceMotion && blobs.length) {
     { passive: true },
   );
   (function blobLoop() {
-    cx += (tx - cx) * 0.04;
-    cy += (ty - cy) * 0.04;
-    blobs.forEach((blob, i) => {
-      const d = (i + 1) * 34;
-      blob.style.translate = `${cx * d}px ${cy * d}px`;
-    });
+    if (!document.hidden) {
+      cx += (tx - cx) * 0.04;
+      cy += (ty - cy) * 0.04;
+      blobs.forEach((blob, i) => {
+        const d = (i + 1) * 34;
+        blob.style.translate = `${cx * d}px ${cy * d}px`;
+      });
+    }
     requestAnimationFrame(blobLoop);
   })();
 }
@@ -169,6 +150,7 @@ const navChapterLinks = Array.from(
 );
 let goToChapter = null;
 let updateJourney = null;
+let activeChapter = 0;
 
 (function initJourney() {
   if (!journey) return;
@@ -179,24 +161,8 @@ let updateJourney = null;
   const dots = Array.from(journey.querySelectorAll(".rail__dot"));
   const steps = chapters.length - 1;
 
-  // Reduced motion: drop the pin + rotation, stack chapters as a normal page.
-  if (reduceMotion || !object || steps < 1) {
-    journey.classList.add("journey--static");
-    goToChapter = (i) =>
-      chapters[clamp(i, 0, steps)]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    return;
-  }
-
-  let targetRot = 0;
-  let curRot = 0;
-  let lastIdx = -1;
-
   function setActive(idx) {
-    if (idx === lastIdx) return;
-    lastIdx = idx;
+    activeChapter = idx;
     faces.forEach((f, k) => f.classList.toggle("is-active", k === idx));
     chapters.forEach((c, k) => c.classList.toggle("is-active", k === idx));
     dots.forEach((d, k) => d.classList.toggle("is-active", k === idx));
@@ -204,6 +170,29 @@ let updateJourney = null;
       link.classList.toggle("is-active", +link.dataset.chapter === idx),
     );
   }
+
+  // Reduced motion: drop the pin + rotation, stack chapters as a normal page.
+  if (reduceMotion || !object || steps < 1) {
+    journey.classList.add("journey--static");
+    goToChapter = (i, smooth = true) => {
+      const el = chapters[clamp(i, 0, steps)];
+      if (!el) return;
+      el.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
+      setActive(clamp(i, 0, steps));
+    };
+    return;
+  }
+
+  let targetRot = 0;
+  let curRot = 0;
+  let lastIdx = -1;
+
+  const innerSetActive = setActive;
+  setActive = function (idx) {
+    if (idx === lastIdx) return;
+    lastIdx = idx;
+    innerSetActive(idx);
+  };
 
   updateJourney = function (y) {
     const total = journey.offsetHeight - window.innerHeight;
@@ -213,17 +202,19 @@ let updateJourney = null;
     setActive(idx);
   };
 
-  goToChapter = function (i) {
+  goToChapter = function (i, smooth = true) {
     const total = journey.offsetHeight - window.innerHeight;
     window.scrollTo({
       top: journey.offsetTop + (clamp(i, 0, steps) / steps) * total,
-      behavior: "smooth",
+      behavior: smooth && !reduceMotion ? "smooth" : "auto",
     });
   };
 
   (function spin() {
-    curRot += (targetRot - curRot) * 0.14;
-    object.style.transform = `perspective(2200px) rotateY(${curRot.toFixed(2)}deg)`;
+    if (!document.hidden) {
+      curRot += (targetRot - curRot) * 0.14;
+      object.style.transform = `perspective(2200px) rotateY(${curRot.toFixed(2)}deg)`;
+    }
     requestAnimationFrame(spin);
   })();
 
@@ -231,10 +222,35 @@ let updateJourney = null;
 })();
 
 // =============================================
+// DEEP LINKS - hash <-> chapter routing
+// =============================================
+function chapterFromHash() {
+  const slug = location.hash.replace(/^#/, "");
+  if (!slug) return null;
+  const i = CHAPTER_SLUGS.indexOf(slug);
+  return i >= 0 ? i : null;
+}
+
+window.addEventListener("hashchange", () => {
+  const idx = chapterFromHash();
+  if (idx !== null && idx !== activeChapter && goToChapter) {
+    goToChapter(idx);
+  }
+});
+
+// =============================================
 // SCROLL - drive chapter rotation
 // =============================================
 const nav = document.querySelector(".nav");
 let scrollTicking = false;
+
+// Keep the URL in sync for deep links, but only once a hash exists
+// (replaceState: scrolling must not spam history, clean URLs stay clean,
+// and a deep-link hash is never clobbered before the initial jump).
+function syncHash() {
+  const slug = "#" + CHAPTER_SLUGS[activeChapter];
+  if (location.hash && location.hash !== slug) history.replaceState(null, "", slug);
+}
 
 window.addEventListener(
   "scroll",
@@ -244,6 +260,7 @@ window.addEventListener(
         const y = window.scrollY;
         nav?.classList.toggle("scrolled", y > 40);
         if (updateJourney) updateJourney(y);
+        syncHash();
         scrollTicking = false;
       });
       scrollTicking = true;
@@ -267,12 +284,15 @@ function closeMobileNav() {
 document.querySelectorAll("[data-chapter]").forEach((el) => {
   el.addEventListener("click", (e) => {
     e.preventDefault();
-    if (goToChapter) goToChapter(+el.dataset.chapter);
+    const idx = +el.dataset.chapter;
+    if (goToChapter) goToChapter(idx);
+    const slug = "#" + CHAPTER_SLUGS[idx];
+    if (location.hash !== slug) history.pushState(null, "", slug);
     closeMobileNav();
   });
 });
 
-// Plain anchor links (e.g. Utilities, footer) - smooth scroll
+// Plain anchor links (e.g. skip link) - smooth scroll
 document.querySelectorAll('a[href^="#"]:not([data-chapter])').forEach((a) => {
   a.addEventListener("click", (e) => {
     const target = document.querySelector(a.getAttribute("href"));
@@ -292,8 +312,22 @@ navToggle?.addEventListener("click", () => {
 // INIT
 // =============================================
 window.addEventListener("DOMContentLoaded", () => {
-  loadFileContent("ssh", "sshCode");
-  Prism.highlightElement(document.getElementById("windowsRepairCode"));
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  setTimeout(typeEffect, 900);
+  loadFileContent("ssh", "sshCode");
+
+  if (reduceMotion && typingEl) {
+    typingEl.textContent = phrases[0];
+  } else {
+    setTimeout(typeEffect, 900);
+  }
+
+  // Deep link on load: jump straight to the requested chapter.
+  const idx = chapterFromHash();
+  if (idx && idx !== 0) {
+    requestAnimationFrame(() => {
+      goToChapter && goToChapter(idx, false);
+    });
+  }
 });
