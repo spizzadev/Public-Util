@@ -7,7 +7,7 @@ deployt via GitHub Pages (`.github/workflows/static.yml` bei Push auf `main`).
 ## Website
 
 - `index.html` – kompletter Seiteninhalt (Hero + echte Sektionen: About, Skills, Projects, Contact, Utilities)
-- `styles.css` – Design (dunkel, Eis-Zyan-Akkord), Responsive, Reduced-Motion
+- `styles.css` – Design (Marke „Paper & Glut“: warmes Nachtschwarz, Glut-Akzent `#f97316`/`#c2410c`), Responsive, Reduced-Motion
 - `scripts.js` – Scroll-Reveal (IntersectionObserver), Scroll-Spy, Copy-Buttons, SSH-Fetch
 - Icons: Inline-SVG-Sprite in `index.html` – bewusst **kein** Font Awesome / Bootstrap / Prism
 - **Performance-Regeln:** kein `backdrop-filter`, keine animierten `filter:blur()`-Flächen,
@@ -21,7 +21,10 @@ Die Sektionen sind echte Anker und direkt verlinkbar: `#home`, `#about`, `#skill
 
 ### Branding / Favicon
 
-`favicon.svg` ist das „MS“-Monogramm (Eiskachel im Seiten-Akkord `#38bdf8 → #0ea5e9`).
+Teil der persönlichen Marke „Paper & Glut“ (Anker: das Movember-Designsystem,
+siehe Workspace `brand/BRAND.md`): warme Papier- und Nacht-Töne, eine Akzentfarbe
+Glut-Orange. `favicon.svg` ist das „MS“-Monogramm (Glut-Kachel `#f97316 → #c2410c`,
+helle Schrift `#fff1e6`).
 Alle PNG-Derivate (ICO, Apple-Touch, Manifest-Icons) werden reproduzierbar erzeugt:
 
 ```

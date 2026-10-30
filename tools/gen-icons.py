@@ -12,9 +12,9 @@ from PIL import Image, ImageDraw
 
 SIZE = 512
 SS = 8  # Supersampling für saubere Kanten
-BG_A = (56, 189, 248)   # --accent   #38bdf8
-BG_B = (14, 165, 233)   # --accent-deep #0ea5e9
-FG = (4, 18, 28)        # #04121c
+BG_A = (249, 115, 22)    # --accent      #f97316 (Glut)
+BG_B = (194, 65, 12)    # --accent-deep #c2410c
+FG = (255, 241, 230)    # #fff1e6 (Marken-Papierton)
 RADIUS = 112
 
 # Dieselben Polygone wie die Pfade in favicon.svg (512er Raster)

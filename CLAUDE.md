@@ -30,8 +30,8 @@ externe Abhängigkeit; keine Frameworks (kein Bootstrap/AOS/Font Awesome/Prism �
 
 ### Branding / Icons
 
-`favicon.svg` = „MS“-Monogramm im Seiten-Akkord (Gradient `#38bdf8 → #0ea5e9`,
-dunkle Schrift `#04121c`). SVG ist Master; alle PNG-Derivate (favicon.ico 16–48,
+`favicon.svg` = „MS“-Monogramm der Marke „Paper & Glut“ (Gradient `#f97316 → #c2410c`,
+helle Schrift `#fff1e6`; Grundflächen warmes Nacht-Schwarz `#1c1b18`). SVG ist Master; alle PNG-Derivate (favicon.ico 16–48,
 apple-touch-icon 180, icon-192/512 fürs Manifest) werden erzeugt mit:
 
 ```
