@@ -494,3 +494,40 @@ section[id] { scroll-margin-top: 96px; }
   [data-reveal] { opacity: 1; transform: none; }
   .caret { animation: none; }
 }
+
+/* =========================================
+   PRINT / PDF (Lebenslauf-Export)
+   eigene Stylesheet-Schicht: warmes Papier, Nacht-Text,
+   Glut-Akzente (brand/BRAND.md); kein Dunkel-auf-Weiss-Unfall mehr.
+   ========================================= */
+@media print {
+  @page { size: A4; margin: 14mm 12mm; }
+  :root {
+    --text: #1c1b18; --muted: #57503f; --muted-dim: #6f6754;
+    --accent: #c2410c; --accent-soft: #9a3412; --accent-deep: #7c2d12;
+    --brd: #d8d0bf; --brd-hi: #c9bfa9;
+  }
+  html, body { background: #fff !important; color: #1c1b18; font-size: 10.5pt; line-height: 1.55; overflow: visible; }
+  .backdrop, .grid-veil, .nav, .skip-link, .hero__art, .caret, .hero__actions, #utilities { display: none !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  .container { max-width: 100%; padding: 0; }
+  .hero { padding: 0 0 6mm; }
+  .hero__inner { grid-template-columns: 1fr; gap: 0; }
+  .hero__name { font-size: 26pt; line-height: 1.15; }
+  .hero__role { font-size: 12pt; color: var(--muted); }
+  .hero__meta { color: var(--muted); font-size: 9.5pt; }
+  .section { padding: 6mm 0 0; }
+  .section-head { font-size: 14pt; border-bottom: 1px solid var(--brd); padding-bottom: 1mm; margin-bottom: 3mm; }
+  .section-sub { margin-bottom: 3mm; }
+  .about-grid { grid-template-columns: 1fr; gap: 4mm; }
+  .stats { grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
+  .skill-cols { grid-template-columns: repeat(3, 1fr); gap: 2.5mm; }
+  .proj-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5mm; }
+  .card { background: #fff !important; border: 1px solid var(--brd) !important; }
+  .stat, .skill-col, .proj, .section-head, .chips { break-inside: avoid; }
+  a { color: #1c1b18; }
+  .tag { border: 1px solid var(--brd); background: #fff; color: #1c1b18; }
+  .footer { border-top: 1px solid var(--brd); background: #fff; padding-top: 2mm; font-size: 9pt; }
+  .footer .ic { display: none; }
+}

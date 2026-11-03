@@ -86,6 +86,15 @@ function startTyping() {
 }
 
 // =============================================
+// PRINT / PDF (Lebenslauf-Export)
+// Typo-Anime vor dem Druck finalisieren, alle Reveals sichtbar machen.
+// =============================================
+window.addEventListener("beforeprint", () => {
+  if (typingEl) typingEl.textContent = phrases[0];
+  document.querySelectorAll("[data-reveal]").forEach((el) => el.classList.add("visible"));
+});
+
+// =============================================
 // REVEAL ON SCROLL - IntersectionObserver only.
 // No scroll listeners, no layout reads, no blur filters.
 // =============================================
