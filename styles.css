@@ -496,38 +496,79 @@ section[id] { scroll-margin-top: 96px; }
 }
 
 /* =========================================
-   PRINT / PDF (Lebenslauf-Export)
-   eigene Stylesheet-Schicht: warmes Papier, Nacht-Text,
-   Glut-Akzente (brand/BRAND.md); kein Dunkel-auf-Weiss-Unfall mehr.
+   PRINT / PDF (Lebenslauf-Export, genau eine A4-Seite)
+   Eigene Schicht: warmes Papier, Nacht-Text, Glut-Akzente
+   (brand/BRAND.md). CV-Fluss: Kopf -> Kontakt -> About -> Skills ->
+   Projects (Reihenfolge nur hier per flex-order, Kontakt blocknah am
+   Kopf). Farb-Pitfalls: color-scheme light verhindert den dunklen
+   Seitenrand des Dark-Mode-Canvas; minmax(0,1fr)/min-width:0 verhindert
+   Rechtsabschneider durch Grid-Min-Content; der Name verliert sein
+   Screen-Gradient (sonst weiss-auf-weiss). Der Bildschirmauftritt ist
+   von diesem Block nicht beruehrt.
    ========================================= */
 @media print {
-  @page { size: A4; margin: 14mm 12mm; }
+  @page { size: A4; margin: 12mm 13mm; }
   :root {
+    color-scheme: light;
     --text: #1c1b18; --muted: #57503f; --muted-dim: #6f6754;
     --accent: #c2410c; --accent-soft: #9a3412; --accent-deep: #7c2d12;
     --brd: #d8d0bf; --brd-hi: #c9bfa9;
   }
-  html, body { background: #fff !important; color: #1c1b18; font-size: 10.5pt; line-height: 1.55; overflow: visible; }
+  html, body { background: #fff !important; color: #1c1b18; font-size: 10.4pt; line-height: 1.5; width: 100%; overflow: visible; }
   .backdrop, .grid-veil, .nav, .skip-link, .hero__art, .caret, .hero__actions, #utilities { display: none !important; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
-  *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
-  .container { max-width: 100%; padding: 0; }
-  .hero { padding: 0 0 6mm; }
-  .hero__inner { grid-template-columns: 1fr; gap: 0; }
-  .hero__name { font-size: 26pt; line-height: 1.15; }
-  .hero__role { font-size: 12pt; color: var(--muted); }
-  .hero__meta { color: var(--muted); font-size: 9.5pt; }
+  *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; min-width: 0; }
+
+  /* CV-Reihenfolge im Druck: Kontakt direkt unter dem Kopf */
+  main { display: flex; flex-direction: column; }
+  #home { order: 1; } #contact { order: 2; } #about { order: 3; } #skills { order: 4; } #projects { order: 5; }
+
+  .container, .hero__inner { max-width: none; width: 100%; padding: 0; }
+  .hero { padding: 0; }
+  .hero__inner { display: block; }
+  .eyebrow { font-size: 8.6pt; letter-spacing: .05em; padding: .8mm 2.8mm; margin-bottom: 2.4mm; color: var(--accent); border: 1px solid rgba(194, 65, 12, .38); background: #fff; }
+  .hero__name {
+    font-size: 26pt; line-height: 1.06; margin: 0;
+    background: none; -webkit-background-clip: border-box; background-clip: border-box;
+    -webkit-text-fill-color: #1c1b18; color: #1c1b18;
+  }
+  .hero__role { font-size: 11.5pt; color: var(--accent); min-height: 0; margin-top: 1.2mm; }
+  .hero__meta { margin-top: 1.8mm; font-size: 9pt; color: var(--muted); }
+  .dot { width: 6px; height: 6px; }
+
   .section { padding: 6mm 0 0; }
-  .section-head { font-size: 14pt; border-bottom: 1px solid var(--brd); padding-bottom: 1mm; margin-bottom: 3mm; }
-  .section-sub { margin-bottom: 3mm; }
-  .about-grid { grid-template-columns: 1fr; gap: 4mm; }
-  .stats { grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
-  .skill-cols { grid-template-columns: repeat(3, 1fr); gap: 2.5mm; }
-  .proj-grid { grid-template-columns: repeat(2, 1fr); gap: 2.5mm; }
+  .section-head { font-size: 12.5pt; gap: .45rem; margin-bottom: 2.2mm; padding-bottom: 1mm; border-bottom: 1.5px solid var(--accent-deep); }
+  .section-head::after { display: none; }
+  .section-sub { font-size: 9.2pt; margin-bottom: 2.6mm; max-width: none; }
+
+  .about-grid { grid-template-columns: 1fr; gap: 2.5mm; }
+  .lead { font-size: 10.2pt; line-height: 1.55; max-width: none; }
+  .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2.5mm; }
+  .stat { padding: 2.6mm 3mm; gap: 0; border-radius: 12px; }
+  .stat__num { font-size: 14pt; color: var(--accent); }
+  .stat__lbl { font-size: 8pt; }
+
+  .skill-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2.5mm; }
+  .skill-col { padding: 3mm 3.4mm; border-radius: 12px; }
+  .skill-col__title { font-size: 10pt; margin-bottom: 2mm; }
+  .chips { gap: 1.8mm; }
+  .tag { font-size: 8.7pt; padding: 1.1mm 2.9mm; }
+
+  .proj-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5mm; }
+  .proj { padding: 3mm 3.4mm; gap: 1.4mm; border-radius: 12px; flex-direction: row; flex-wrap: wrap; }
+  .proj__icon { width: 8mm; height: 8mm; border-radius: 9px; font-size: 1.05rem; }
+  .proj__title { font-size: 10.2pt; }
+  .proj__text { font-size: 9.2pt; flex-basis: 100%; }
+  .proj__link { font-size: 8.8pt; margin-top: auto; }
+
+  .tag--link { font-size: 9.2pt; padding: 1.3mm 3.4mm; }
+
   .card { background: #fff !important; border: 1px solid var(--brd) !important; }
-  .stat, .skill-col, .proj, .section-head, .chips { break-inside: avoid; }
-  a { color: #1c1b18; }
+  .stat, .skill-col, .proj, .section-head, .chips, .hero__text { break-inside: avoid; }
+  a { color: #1c1b18; text-decoration: none; }
   .tag { border: 1px solid var(--brd); background: #fff; color: #1c1b18; }
-  .footer { border-top: 1px solid var(--brd); background: #fff; padding-top: 2mm; font-size: 9pt; }
+
+  .footer { border-top: 1px solid var(--brd); background: #fff; margin-top: 6mm; padding-top: 2mm; }
+  .footer__inner { max-width: none; padding: 0; font-size: 8.5pt; }
   .footer .ic { display: none; }
 }
